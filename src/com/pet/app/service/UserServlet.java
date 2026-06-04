@@ -1,0 +1,70 @@
+package com.pet.app.service;
+import com.pet.app.entity.User;
+import com.pet.app.service.UserService;
+
+// 注意这里一定是 jakarta，不能是 javax！
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+// 这个注解非常重要！它定义了浏览器访问这个 Servlet 的网址路径
+@WebServlet("/userServlet")
+public class UserServlet extends HttpServlet {
+
+    private UserService userService = new UserService();
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 1. 设置请求和响应的中文编码，防止乱码
+        req.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html;charset=UTF-8");
+
+        // 2. 获取前端传来的“动作”指令（判断是来登录的，还是来注册的）
+        String action = req.getParameter("action");
+
+        if ("login".equals(action)) {
+            // ==== 处理登录请求 ====
+            String username = req.getParameter("username");
+            String password = req.getParameter("password");
+
+            User loginUser = userService.login(username, password);
+            if (loginUser != null) {
+                // 登录成功：把用户信息存进 Session（这样后续在这个浏览器里就能一直保持登录状态了）
+                req.getSession().setAttribute("user", loginUser);
+                resp.getWriter().write("<h2>登录成功！欢迎你：" + loginUser.getUsername() + "</h2>");
+                // TODO: 之后这里会跳转到系统后台的主页
+            } else {
+                // 登录失败
+                resp.getWriter().write("<h2>登录失败：用户名或密码错误！</h2>");
+                // TODO: 之后这里会跳回登录页面，并提示错误
+            }
+
+        } else if ("register".equals(action)) {
+            // ==== 处理注册请求 ====
+            User newUser = new User();
+            newUser.setUsername(req.getParameter("username"));
+            newUser.setPassword(req.getParameter("password"));
+            newUser.setPhone(req.getParameter("phone"));
+            // 为了演示，前端传来的 role (0或1)，转换成数字存入
+            newUser.setRole(Integer.parseInt(req.getParameter("role")));
+
+            boolean isSuccess = userService.registerUser(newUser);
+            if (isSuccess) {
+                resp.getWriter().write("<h2>注册成功！请去登录吧。</h2>");
+                // TODO: 之后这里会跳到登录页面
+            } else {
+                resp.getWriter().write("<h2>注册失败：该用户名已经被占用了！</h2>");
+            }
+        }
+    }
+
+    // 如果浏览器发来的是 GET 请求，也统统交给 doPost 处理
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doPost(req, resp);
+    }
+}
