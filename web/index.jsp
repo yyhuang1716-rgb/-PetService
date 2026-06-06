@@ -88,6 +88,54 @@
         .navbar .nav-buttons {
             display: flex;
             gap: 12px;
+            align-items: center;
+        }
+
+        .navbar .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .navbar .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD166, #06C270);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .navbar .username {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .navbar .role-badge {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .role-badge.user {
+            background: #E8FAF0;
+            color: #06C270;
+        }
+
+        .role-badge.merchant {
+            background: #FFF4D6;
+            color: #FF8C00;
+        }
+
+        .role-badge.admin {
+            background: #FFE8E8;
+            color: #FF4444;
         }
 
         .navbar .nav-buttons .btn-login {
@@ -122,6 +170,23 @@
         .navbar .nav-buttons .btn-register:hover {
             background: #FFAB00;
             border-color: #FFAB00;
+        }
+
+        .navbar .btn-logout {
+            padding: 8px 20px;
+            border: 2px solid #FF6B6B;
+            border-radius: 24px;
+            color: #FF6B6B;
+            font-weight: 600;
+            font-size: 14px;
+            background: transparent;
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+
+        .navbar .btn-logout:hover {
+            background: #FF6B6B;
+            color: #FFFFFF;
         }
 
         /* ===== 英雄区域 ===== */
@@ -189,6 +254,61 @@
             justify-content: center;
             font-size: 80px;
             box-shadow: 0 8px 32px rgba(255, 209, 102, 0.3);
+        }
+
+        /* ===== 快捷功能入口 ===== */
+        .quick-actions {
+            padding: 48px 0 0;
+        }
+
+        .actions-grid {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .action-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 28px 24px;
+            flex: 1 1 200px;
+            max-width: 240px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid #06C270;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        .action-card .icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .action-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #2D2D2D;
+        }
+
+        .action-card p {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .action-card.merchant-action {
+            border-top-color: #FFD166;
+        }
+
+        .action-card.admin-action {
+            border-top-color: #FF6B6B;
         }
 
         /* ===== 服务卡片区 ===== */
@@ -475,6 +595,16 @@
                 max-width: 100%;
                 width: 100%;
             }
+
+            .actions-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-card {
+                max-width: 100%;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -488,12 +618,48 @@
         </div>
         <div class="nav-links">
             <a href="${pageContext.request.contextPath}/">首页</a>
-            <a href="#">服务介绍</a>
-            <a href="#">联系我们</a>
+            <c:choose>
+                <c:when test="${not empty sessionScope.user && sessionScope.user.role == 1}">
+                    <a href="#">服务管理</a>
+                    <a href="#">订单管理</a>
+                </c:when>
+                <c:when test="${not empty sessionScope.user && sessionScope.user.role == 2}">
+                    <a href="#">用户管理</a>
+                    <a href="#">平台管理</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="#">服务介绍</a>
+                    <a href="#">联系我们</a>
+                </c:otherwise>
+            </c:choose>
         </div>
         <div class="nav-buttons">
-            <a href="${pageContext.request.contextPath}/login.jsp" class="btn-login">登录</a>
-            <a href="${pageContext.request.contextPath}/register.jsp" class="btn-register">立即注册</a>
+            <c:choose>
+                <c:when test="${empty sessionScope.user}">
+                    <a href="${pageContext.request.contextPath}/login.jsp" class="btn-login">登录</a>
+                    <a href="${pageContext.request.contextPath}/register.jsp" class="btn-register">立即注册</a>
+                </c:when>
+                <c:otherwise>
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <c:out value="${fn:substring(sessionScope.user.username, 0, 1)}" />
+                        </div>
+                        <span class="username"><c:out value="${sessionScope.user.username}" /></span>
+                        <c:choose>
+                            <c:when test="${sessionScope.user.role == 0}">
+                                <span class="role-badge user">普通用户</span>
+                            </c:when>
+                            <c:when test="${sessionScope.user.role == 1}">
+                                <span class="role-badge merchant">商家</span>
+                            </c:when>
+                            <c:when test="${sessionScope.user.role == 2}">
+                                <span class="role-badge admin">管理员</span>
+                            </c:when>
+                        </c:choose>
+                    </div>
+                    <a href="${pageContext.request.contextPath}/userServlet?action=logout" class="btn-logout">退出</a>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </nav>
@@ -502,13 +668,117 @@
 <section class="hero">
     <div class="container">
         <div class="hero-text">
-            <h1>给毛孩子，最贴心的照料</h1>
-            <p>专业宠物美容、寄养、看诊、训练一站式服务平台，让每一只毛孩子都能享受五星级的关爱。</p>
-            <a href="#" class="btn-book">立即预约</a>
+            <c:choose>
+                <c:when test="${empty sessionScope.user}">
+                    <h1>给毛孩子，最贴心的照料</h1>
+                    <p>专业宠物美容、寄养、看诊、训练一站式服务平台，让每一只毛孩子都能享受五星级的关爱。</p>
+                    <a href="${pageContext.request.contextPath}/register.jsp" class="btn-book">立即注册</a>
+                </c:when>
+                <c:when test="${sessionScope.user.role == 0}">
+                    <h1>欢迎回来，<c:out value="${sessionScope.user.username}" />！</h1>
+                    <p>为您心爱的毛孩子预约专业服务，让它们享受最好的照顾。</p>
+                    <a href="#" class="btn-book">立即预约服务</a>
+                </c:when>
+                <c:when test="${sessionScope.user.role == 1}">
+                    <h1>商家工作台</h1>
+                    <p>管理您的服务项目，处理客户订单，提升服务质量。</p>
+                    <a href="#" class="btn-book">查看今日订单</a>
+                </c:when>
+                <c:otherwise>
+                    <h1>管理平台</h1>
+                    <p>监控平台运营状况，管理用户和服务商。</p>
+                    <a href="#" class="btn-book">进入管理后台</a>
+                </c:otherwise>
+            </c:choose>
         </div>
         <div class="hero-graphic">🐾</div>
     </div>
 </section>
+
+<!-- ==================== 快捷功能入口（仅登录用户可见）==================== -->
+<c:if test="${not empty sessionScope.user}">
+    <section class="quick-actions">
+        <div class="container">
+            <c:choose>
+                <c:when test="${sessionScope.user.role == 0}">
+                    <h2 class="section-title">我的功能</h2>
+                    <div class="actions-grid">
+                        <div class="action-card">
+                            <div class="icon">📅</div>
+                            <h3>我的预约</h3>
+                            <p>查看和管理预约</p>
+                        </div>
+                        <div class="action-card">
+                            <div class="icon">⭐</div>
+                            <h3>我的收藏</h3>
+                            <p>收藏的服务和商家</p>
+                        </div>
+                        <div class="action-card">
+                            <div class="icon">💬</div>
+                            <h3>我的评价</h3>
+                            <p>查看历史评价</p>
+                        </div>
+                        <div class="action-card">
+                            <div class="icon">👤</div>
+                            <h3>个人中心</h3>
+                            <p>个人信息设置</p>
+                        </div>
+                    </div>
+                </c:when>
+                <c:when test="${sessionScope.user.role == 1}">
+                    <h2 class="section-title">商家功能</h2>
+                    <div class="actions-grid">
+                        <div class="action-card merchant-action">
+                            <div class="icon">📋</div>
+                            <h3>订单管理</h3>
+                            <p>处理客户订单</p>
+                        </div>
+                        <div class="action-card merchant-action">
+                            <div class="icon">✂️</div>
+                            <h3>服务管理</h3>
+                            <p>管理服务项目</p>
+                        </div>
+                        <div class="action-card merchant-action">
+                            <div class="icon">📊</div>
+                            <h3>数据统计</h3>
+                            <p>查看经营数据</p>
+                        </div>
+                        <div class="action-card merchant-action">
+                            <div class="icon">💼</div>
+                            <h3>店铺设置</h3>
+                            <p>店铺信息管理</p>
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <h2 class="section-title">管理功能</h2>
+                    <div class="actions-grid">
+                        <div class="action-card admin-action">
+                            <div class="icon">👥</div>
+                            <h3>用户管理</h3>
+                            <p>管理注册用户</p>
+                        </div>
+                        <div class="action-card admin-action">
+                            <div class="icon">🏪</div>
+                            <h3>商家管理</h3>
+                            <p>管理服务商</p>
+                        </div>
+                        <div class="action-card admin-action">
+                            <div class="icon">📈</div>
+                            <h3>平台数据</h3>
+                            <p>平台运营数据</p>
+                        </div>
+                        <div class="action-card admin-action">
+                            <div class="icon">⚙️</div>
+                            <h3>系统设置</h3>
+                            <p>系统配置管理</p>
+                        </div>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </section>
+</c:if>
 
 <!-- ==================== 服务卡片区 ==================== -->
 <section class="section-services">
