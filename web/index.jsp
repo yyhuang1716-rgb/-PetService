@@ -639,8 +639,8 @@
         <div class="nav-buttons">
             <c:choose>
                 <c:when test="${empty sessionScope.user}">
-                    <a href="${pageContext.request.contextPath}/login.jsp" class="btn-login">登录</a>
-                    <a href="${pageContext.request.contextPath}/register.jsp" class="btn-register">立即注册</a>
+                    <a href="${pageContext.request.contextPath}/view/user/login.jsp" class="btn-login">登录</a>
+                    <a href="${pageContext.request.contextPath}/view/user/register.jsp" class="btn-register">立即注册</a>
                 </c:when>
                 <c:otherwise>
                     <div class="user-info">
@@ -675,12 +675,12 @@
                 <c:when test="${empty sessionScope.user}">
                     <h1>给毛孩子，最贴心的照料</h1>
                     <p>专业宠物美容、寄养、看诊、训练一站式服务平台，让每一只毛孩子都能享受五星级的关爱。</p>
-                    <a href="${pageContext.request.contextPath}/register.jsp" class="btn-book">立即注册</a>
+                    <a href="${pageContext.request.contextPath}/view/user/register.jsp" class="btn-book">立即注册</a>
                 </c:when>
                 <c:when test="${sessionScope.user.role == 0}">
                     <h1>欢迎回来，<c:out value="${sessionScope.user.username}" />！</h1>
                     <p>为您心爱的毛孩子预约专业服务，让它们享受最好的照顾。</p>
-                    <a href="#" class="btn-book">立即预约服务</a>
+                    <a href="${pageContext.request.contextPath}/petServlet?action=list" class="btn-book">查看我的宠物</a>
                 </c:when>
                 <c:when test="${sessionScope.user.role == 1}">
                     <h1>商家工作台</h1>

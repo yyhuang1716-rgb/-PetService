@@ -37,7 +37,7 @@ public class AuthFilter extends HttpFilter {
             chain.doFilter(req, res);
         } else {
             // 未登录，重定向到登录页面
-            res.sendRedirect(req.getContextPath() + "/login.jsp");
+            res.sendRedirect(req.getContextPath() + "/view/user/login.jsp");
         }
     }
 
@@ -50,11 +50,15 @@ public class AuthFilter extends HttpFilter {
             return true;
         }
         // 登录 / 注册页面
-        if ("/login.jsp".equals(path) || "/register.jsp".equals(path)) {
+        if ("/view/user/login.jsp".equals(path) || "/view/user/register.jsp".equals(path)) {
             return true;
         }
         // 登录 / 注册请求（由 UserServlet 根据 action 参数区分）
         if ("/userServlet".equals(path)) {
+            return true;
+        }
+        // 宠物相关页面
+        if ("/petServlet".equals(path)) {
             return true;
         }
         // 静态资源（CSS/JS/图片等）

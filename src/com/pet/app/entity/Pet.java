@@ -1,6 +1,6 @@
 package com.pet.app.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Pet {
     private Integer id;
@@ -9,7 +9,7 @@ public class Pet {
     private String type;          // 种类：猫/狗/其他
     private Integer age;          // 年龄
     private Double weight;        // 体重 (对应 DECIMAL，Java 中用 Double 接收)
-    private Date createTime;
+    private LocalDateTime createTime;
 
     public Pet() {}
 
@@ -31,6 +31,6 @@ public class Pet {
     public Double getWeight() { return weight; }
     public void setWeight(Double weight) { this.weight = weight; }
 
-    public Date getCreateTime() { return createTime; }
-    public void setCreateTime(Date createTime) { this.createTime = createTime; }
+    public LocalDateTime getCreateTime() { return createTime; }
+    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
 }
