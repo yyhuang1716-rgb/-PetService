@@ -16,9 +16,11 @@
             box-sizing: border-box;
         }
 
+
         body {
             font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             font-weight: 400;
+
             background-color: #FFFDF5;
             color: #2D2D2D;
             line-height: 1.6;

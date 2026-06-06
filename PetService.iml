@@ -24,5 +24,6 @@
     <orderEntry type="library" exported="" name="druid-1.2.28" level="project" />
     <orderEntry type="library" exported="" name="jakarta.servlet.jsp.jstl-3.0.0" level="project" />
     <orderEntry type="library" exported="" name="mysql-connector-j-9.6.0" level="project" />
+    <orderEntry type="library" exported="" name="jakarta.servlet.jsp.jstl-api-3.0.0" level="project" />
   </component>
 </module>
