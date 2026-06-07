@@ -25,7 +25,7 @@ public class ServiceOrderDao extends BaseDao {
     }
 
     /**
-     * 根据用户ID查询该用户的所有订单（多表联查，包含服务名称和宠物名称）
+     * 根据用户ID查询该用户的所有订单（多表联查，包含服务名称、宠物名称和用户名）
      * @param userId 用户ID
      * @return 订单列表
      */
@@ -33,10 +33,12 @@ public class ServiceOrderDao extends BaseDao {
         String sql = "SELECT so.id, so.user_id userId, so.pet_id petId, so.service_id serviceId, " +
                 "so.title, so.price, so.description, so.appoint_time appointTime, so.status, so.create_time createTime, " +
                 "si.title AS serviceTitle, " +
-                "pi.name AS petName " +
+                "pi.name AS petName, " +
+                "u.username AS username " +
                 "FROM service_order so " +
                 "LEFT JOIN service_item si ON so.service_id = si.id " +
                 "LEFT JOIN sys_pet pi ON so.pet_id = pi.id " +
+                "LEFT JOIN sys_user u ON so.user_id = u.id " +
                 "WHERE so.user_id = ? ORDER BY so.create_time DESC";
         return queryForList(ServiceOrder.class, sql, userId);
     }
@@ -44,20 +46,21 @@ public class ServiceOrderDao extends BaseDao {
     /**
      * 更新订单状态
      * @param id 订单ID
-     * @param status 新的状态
+     * @param status 新的状态（如：已接单、服务中、已完成、已取消）
      * @return 影响的行数，大于 0 说明成功
      */
-    public int updateOrderStatus(Integer id, Integer status) {
+    public int updateOrderStatus(Integer id, String status) {
         String sql = "UPDATE service_order SET status = ? WHERE id = ?";
-        return update(sql, status, id);
+        int rows = update(sql, status, id);
+        return rows;
     }
 
     /**
-     * 取消订单（将状态设置为 4）
+     * 取消订单（将状态设置为 已取消）
      * @param id 订单ID
      * @return 影响的行数，大于 0 说明成功
      */
     public int cancelOrder(Integer id) {
-        return updateOrderStatus(id, 4);
+        return updateOrderStatus(id, "已取消");
     }
 }

@@ -12,8 +12,9 @@ public class ServiceOrder {
     private String description;   // 服务描述快照
     private String serviceTitle;  // 服务名称（联表查询从 service_item 获取）
     private String petName;       // 宠物名称（联表查询从 sys_pet 获取）
+    private String username;      // 用户名（联表查询从 sys_user 获取）
     private LocalDateTime appointTime;     // 预约服务时间
-    private Integer status;       // 状态：0待接单, 1已接单, 2服务中, 3已完成, 4已取消
+    private String status;        // 状态：待接单, 已接单, 服务中, 已完成, 已取消
     private LocalDateTime createTime;
 
     public ServiceOrder() {}
@@ -45,11 +46,14 @@ public class ServiceOrder {
     public String getPetName() { return petName; }
     public void setPetName(String petName) { this.petName = petName; }
 
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
     public LocalDateTime getAppointTime() { return appointTime; }
     public void setAppointTime(LocalDateTime appointTime) { this.appointTime = appointTime; }
 
-    public Integer getStatus() { return status; }
-    public void setStatus(Integer status) { this.status = status; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
     public LocalDateTime getCreateTime() { return createTime; }
     public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }

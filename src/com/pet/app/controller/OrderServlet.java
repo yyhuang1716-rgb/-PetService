@@ -108,7 +108,7 @@ public class OrderServlet extends HttpServlet {
 
     /**
      * 取消预约订单
-     * 将订单状态更新为 4（已取消），然后重定向到我的预约列表
+     * 将订单状态更新为 已取消，然后重定向到我的预约列表
      */
     private void cancelOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
@@ -121,16 +121,12 @@ public class OrderServlet extends HttpServlet {
 
         try {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
-            System.out.println("=== cancelOrder 被调用, orderId=" + orderId + " ===");
             boolean result = serviceOrderService.cancelOrder(orderId);
-            System.out.println("=== cancelOrder 结果: " + (result ? "成功" : "失败") + " ===");
             resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode(result ? "订单已取消" : "取消失败，请重试", "UTF-8"));
         } catch (NumberFormatException e) {
-            System.err.println("=== cancelOrder 参数错误: " + e.getMessage() + " ===");
             e.printStackTrace();
             resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("参数错误", "UTF-8"));
         } catch (Exception e) {
-            System.err.println("=== cancelOrder 异常: " + e.getClass().getName() + ": " + e.getMessage() + " ===");
             e.printStackTrace();
             resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("服务器异常，请稍后重试", "UTF-8"));
         }
@@ -179,7 +175,7 @@ public class OrderServlet extends HttpServlet {
                 order.setDescription(serviceItem.getDescription());
             }
             order.setAppointTime(appointTime);
-            order.setStatus(0); // 0 代表待接单
+            order.setStatus("待接单");
 
             // 调用 Service 层插入订单
             boolean success = serviceOrderService.createOrder(order);
