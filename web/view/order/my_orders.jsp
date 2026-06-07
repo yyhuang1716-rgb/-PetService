@@ -174,7 +174,7 @@
                             <%-- 取消预约按钮（仅"待接单"状态可取消） --%>
                         <c:if test="${order.status == '待接单'}">
                             <div style="margin-top: 12px;">
-                                <a href="${pageContext.request.contextPath}/OrderServlet?action=cancelOrder&orderId=${order.id}"
+                                <a href="${pageContext.request.contextPath}/orderServlet?action=cancelOrder&orderId=${order.id}"
                                    class="btn-cancel"
                                    onclick="return confirm('确定要取消这个预约吗？')">
                                     🗑️ 取消预约
