@@ -61,6 +61,10 @@ public class AuthFilter extends HttpFilter {
         if ("/petServlet".equals(path)) {
             return true;
         }
+        // 服务项目相关页面
+        if ("/serviceItemServlet".equals(path)) {
+            return true;
+        }
         // 静态资源（CSS/JS/图片等）
         if (path.startsWith("/static/") || path.startsWith("/assets/")) {
             return true;

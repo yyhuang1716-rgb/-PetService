@@ -1,6 +1,6 @@
 package com.pet.app.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ServiceItem {
     private Integer id;
@@ -8,7 +8,7 @@ public class ServiceItem {
     private String title;         // 服务名称
     private Double price;         // 服务价格
     private String description;   // 详细描述
-    private Date createTime;
+    private LocalDateTime createTime;
 
     public ServiceItem() {}
 
@@ -27,6 +27,6 @@ public class ServiceItem {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Date getCreateTime() { return createTime; }
-    public void setCreateTime(Date createTime) { this.createTime = createTime; }
+    public LocalDateTime getCreateTime() { return createTime; }
+    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
 }

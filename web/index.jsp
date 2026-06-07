@@ -631,8 +631,8 @@
                     <a href="#">平台管理</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="#">服务介绍</a>
-                    <a href="#">联系我们</a>
+                    <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list">服务项目</a>
+                    <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list">联系我们</a>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -680,12 +680,13 @@
                 <c:when test="${sessionScope.user.role == 0}">
                     <h1>欢迎回来，<c:out value="${sessionScope.user.username}" />！</h1>
                     <p>为您心爱的毛孩子预约专业服务，让它们享受最好的照顾。</p>
+                    <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list" class="btn-book" style="margin-right: 12px;">浏览服务</a>
                     <a href="${pageContext.request.contextPath}/petServlet?action=list" class="btn-book">查看我的宠物</a>
                 </c:when>
                 <c:when test="${sessionScope.user.role == 1}">
                     <h1>商家工作台</h1>
                     <p>管理您的服务项目，处理客户订单，提升服务质量。</p>
-                    <a href="#" class="btn-book">查看今日订单</a>
+                    <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list" class="btn-book">管理服务项目</a>
                 </c:when>
                 <c:otherwise>
                     <h1>管理平台</h1>
@@ -706,6 +707,11 @@
                 <c:when test="${sessionScope.user.role == 0}">
                     <h2 class="section-title">我的功能</h2>
                     <div class="actions-grid">
+                        <div class="action-card" onclick="window.location.href='${pageContext.request.contextPath}/serviceItemServlet?action=list'">
+                            <div class="icon">🎯</div>
+                            <h3>服务项目</h3>
+                            <p>浏览所有可预约服务</p>
+                        </div>
                         <div class="action-card">
                             <div class="icon">📅</div>
                             <h3>我的预约</h3>
@@ -788,28 +794,28 @@
     <div class="container">
         <h2 class="section-title">我们的服务</h2>
         <div class="services-grid">
-            <div class="service-card">
+            <div class="service-card" onclick="window.location.href='${pageContext.request.contextPath}/serviceItemServlet?action=list'" style="cursor: pointer;">
                 <div class="icon">✂️</div>
                 <h3>美容护理</h3>
                 <p>专业宠物美容师提供</p>
                 <p>洗护、修剪、造型服务</p>
                 <span class="price-tag">¥68 起</span>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="window.location.href='${pageContext.request.contextPath}/serviceItemServlet?action=list'" style="cursor: pointer;">
                 <div class="icon">🏠</div>
                 <h3>温馨寄养</h3>
                 <p>24 小时专人陪伴看护</p>
                 <p>独立舒适寄养空间</p>
                 <span class="price-tag">¥88 起</span>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="window.location.href='${pageContext.request.contextPath}/serviceItemServlet?action=list'" style="cursor: pointer;">
                 <div class="icon">💉</div>
                 <h3>健康看诊</h3>
                 <p>资深兽医师常规检查</p>
                 <p>疫苗接种与健康咨询</p>
                 <span class="price-tag">¥50 起</span>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="window.location.href='${pageContext.request.contextPath}/serviceItemServlet?action=list'" style="cursor: pointer;">
                 <div class="icon">🏅</div>
                 <h3>行为训练</h3>
                 <p>科学正向激励训练</p>
