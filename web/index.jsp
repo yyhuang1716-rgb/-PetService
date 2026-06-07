@@ -712,7 +712,7 @@
                             <h3>服务项目</h3>
                             <p>浏览所有可预约服务</p>
                         </div>
-                        <div class="action-card">
+                        <div class="action-card" onclick="window.location.href='${pageContext.request.contextPath}/orderServlet?action=myOrders'">
                             <div class="icon">📅</div>
                             <h3>我的预约</h3>
                             <p>查看和管理预约</p>

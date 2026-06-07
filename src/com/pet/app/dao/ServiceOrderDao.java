@@ -25,12 +25,19 @@ public class ServiceOrderDao extends BaseDao {
     }
 
     /**
-     * 根据用户ID查询该用户的所有订单
+     * 根据用户ID查询该用户的所有订单（多表联查，包含服务名称和宠物名称）
      * @param userId 用户ID
      * @return 订单列表
      */
     public java.util.List<ServiceOrder> queryOrdersByUserId(Integer userId) {
-        String sql = "SELECT id, user_id userId, pet_id petId, service_id serviceId, title, price, description, appoint_time appointTime, status, create_time createTime FROM service_order WHERE user_id = ? ORDER BY create_time DESC";
+        String sql = "SELECT so.id, so.user_id userId, so.pet_id petId, so.service_id serviceId, " +
+                "so.title, so.price, so.description, so.appoint_time appointTime, so.status, so.create_time createTime, " +
+                "si.title AS serviceTitle, " +
+                "pi.name AS petName " +
+                "FROM service_order so " +
+                "LEFT JOIN service_item si ON so.service_id = si.id " +
+                "LEFT JOIN sys_pet pi ON so.pet_id = pi.id " +
+                "WHERE so.user_id = ? ORDER BY so.create_time DESC";
         return queryForList(ServiceOrder.class, sql, userId);
     }
 

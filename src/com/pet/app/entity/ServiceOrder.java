@@ -1,6 +1,6 @@
 package com.pet.app.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ServiceOrder {
     private Integer id;
@@ -10,9 +10,11 @@ public class ServiceOrder {
     private String title;         // 服务名称快照（下单时从 service_item 冗余）
     private Double price;         // 服务价格快照
     private String description;   // 服务描述快照
-    private Date appointTime;     // 预约服务时间
+    private String serviceTitle;  // 服务名称（联表查询从 service_item 获取）
+    private String petName;       // 宠物名称（联表查询从 sys_pet 获取）
+    private LocalDateTime appointTime;     // 预约服务时间
     private Integer status;       // 状态：0待接单, 1已接单, 2服务中, 3已完成, 4已取消
-    private Date createTime;
+    private LocalDateTime createTime;
 
     public ServiceOrder() {}
 
@@ -37,12 +39,18 @@ public class ServiceOrder {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Date getAppointTime() { return appointTime; }
-    public void setAppointTime(Date appointTime) { this.appointTime = appointTime; }
+    public String getServiceTitle() { return serviceTitle; }
+    public void setServiceTitle(String serviceTitle) { this.serviceTitle = serviceTitle; }
+
+    public String getPetName() { return petName; }
+    public void setPetName(String petName) { this.petName = petName; }
+
+    public LocalDateTime getAppointTime() { return appointTime; }
+    public void setAppointTime(LocalDateTime appointTime) { this.appointTime = appointTime; }
 
     public Integer getStatus() { return status; }
     public void setStatus(Integer status) { this.status = status; }
 
-    public Date getCreateTime() { return createTime; }
-    public void setCreateTime(Date createTime) { this.createTime = createTime; }
+    public LocalDateTime getCreateTime() { return createTime; }
+    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
 }

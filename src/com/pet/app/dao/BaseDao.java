@@ -27,6 +27,7 @@ public abstract class BaseDao {
         Connection connection = null;
         try {
             connection = JdbcUtils.getConnection();
+            connection.setAutoCommit(true);  // 确保自动提交，防止事务回滚导致数据未持久化
             return queryRunner.update(connection, sql, args);
         } catch (SQLException e) {
             e.printStackTrace();

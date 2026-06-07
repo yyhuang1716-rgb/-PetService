@@ -16,9 +16,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @WebServlet("/orderServlet")
@@ -45,6 +44,10 @@ public class OrderServlet extends HttpServlet {
             toBook(req, resp);
         } else if ("submitBook".equals(action)) {
             submitBook(req, resp);
+        } else if ("myOrders".equals(action)) {
+            myOrders(req, resp);
+        } else if ("cancelOrder".equals(action)) {
+            cancelOrder(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list");
         }
@@ -84,6 +87,56 @@ public class OrderServlet extends HttpServlet {
     }
 
     /**
+     * 查看当前登录用户的预约订单列表
+     */
+    private void myOrders(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/view/user/login.jsp");
+            return;
+        }
+
+        // 调用 DAO 多表联查该用户的所有预约订单
+        List<ServiceOrder> orderList = serviceOrderService.getOrdersByUserId(user.getId());
+        req.setAttribute("orderList", orderList);
+
+        // 转发到我的预约页面
+        req.getRequestDispatcher("/view/order/my_orders.jsp").forward(req, resp);
+    }
+
+    /**
+     * 取消预约订单
+     * 将订单状态更新为 4（已取消），然后重定向到我的预约列表
+     */
+    private void cancelOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/view/user/login.jsp");
+            return;
+        }
+
+        try {
+            int orderId = Integer.parseInt(req.getParameter("orderId"));
+            System.out.println("=== cancelOrder 被调用, orderId=" + orderId + " ===");
+            boolean result = serviceOrderService.cancelOrder(orderId);
+            System.out.println("=== cancelOrder 结果: " + (result ? "成功" : "失败") + " ===");
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode(result ? "订单已取消" : "取消失败，请重试", "UTF-8"));
+        } catch (NumberFormatException e) {
+            System.err.println("=== cancelOrder 参数错误: " + e.getMessage() + " ===");
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("参数错误", "UTF-8"));
+        } catch (Exception e) {
+            System.err.println("=== cancelOrder 异常: " + e.getClass().getName() + ": " + e.getMessage() + " ===");
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("服务器异常，请稍后重试", "UTF-8"));
+        }
+    }
+
+    /**
      * 提交预约订单
      * 接收表单数据，封装成 ServiceOrder 对象，调用 DAO 插入数据库
      */
@@ -108,9 +161,9 @@ public class OrderServlet extends HttpServlet {
             int petId = Integer.parseInt(req.getParameter("pet_id"));
             String appointTimeStr = req.getParameter("appointment_time");
 
-            // 解析预约时间字符串为 Date 对象
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-            Date appointTime = sdf.parse(appointTimeStr);
+            // 解析预约时间字符串为 LocalDateTime 对象
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            LocalDateTime appointTime = LocalDateTime.parse(appointTimeStr, formatter);
 
             // 获取服务项目信息（用于快照冗余）
             ServiceItem serviceItem = serviceItemDao.queryServiceById(serviceId);
@@ -139,7 +192,7 @@ public class OrderServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list&msg=" + URLEncoder.encode("预约失败，请重试", "UTF-8"));
             }
 
-        } catch (NumberFormatException | ParseException e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             // 参数解析失败，重定向并提示错误
             resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list&msg=" + URLEncoder.encode("参数错误，请重新预约", "UTF-8"));
