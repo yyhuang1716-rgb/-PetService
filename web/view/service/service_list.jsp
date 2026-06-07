@@ -8,6 +8,18 @@
         .container { max-width: 1000px; margin: 0 auto; }
         h2 { color: #06C270; text-align: center; margin-bottom: 30px; }
 
+        /* 消息提示 */
+        .msg-toast {
+            text-align: center;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        .msg-success { background: #E8F8E8; color: #06C270; border: 1px solid #B8E8B8; }
+        .msg-error { background: #FFE8E8; color: #FF4444; border: 1px solid #FFCCCC; }
+
         /* 服务卡片布局 */
         .service-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-bottom: 40px; }
         .service-card { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); border-left: 4px solid #06C270; display: flex; flex-direction: column; min-height: 200px; }
@@ -40,6 +52,18 @@
     <a href="${pageContext.request.contextPath}/index.jsp" class="nav-back">⬅ 返回主页</a>
     <h2>🎯 所有服务项目</h2>
 
+    <%-- 显示操作结果消息（预约成功/失败等） --%>
+    <c:if test="${not empty param.msg}">
+        <c:choose>
+            <c:when test="${param.msg eq '预约成功'}">
+                <div class="msg-toast msg-success">✅ ${param.msg}！商家将尽快与您联系确认。</div>
+            </c:when>
+            <c:otherwise>
+                <div class="msg-toast msg-error">❌ ${param.msg}</div>
+            </c:otherwise>
+        </c:choose>
+    </c:if>
+
     <div class="service-grid">
         <c:choose>
             <c:when test="${empty requestScope.serviceList}">
@@ -55,7 +79,7 @@
                         <p class="desc">${service.description}</p>
                         <p class="price">¥${service.price} <small>/ 次</small></p>
                         <div class="btn-group">
-                            <a href="#" class="btn-book" onclick="alert('🎉 预约成功！商家将尽快联系您。'); return false;">立即预约</a>
+                            <a href="${pageContext.request.contextPath}/orderServlet?action=toBook&service_item_id=${service.id}&merchant_id=${service.merchantId}" class="btn-book">立即预约</a>
                             <a href="${pageContext.request.contextPath}/serviceItemServlet?action=delete&id=${service.id}" class="btn-del" onclick="return confirm('确定要删除这个服务项目吗？');">删除</a>
                         </div>
                     </div>
