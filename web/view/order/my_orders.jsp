@@ -77,7 +77,7 @@
         }
         .status-pending { background: #FFF3CD; color: #856404; }     /* 黄色-待接单 */
         .status-accepted { background: #D4EDDA; color: #155724; }    /* 绿色-已接单 */
-        .status-done { background: #E2E3E5; color: #383D41; }        /* 灰色-已完成 */
+        .status-done { background: #E2E3E5; color: #383D41; }        /* 灰色-已完成/取消 */
 
         .nav-back {
             display: inline-block;
@@ -85,12 +85,6 @@
             color: #06C270;
             text-decoration: none;
             font-weight: bold;
-        }
-        .nav-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
         }
 
         /* 取消预约按钮 */
@@ -106,9 +100,7 @@
             transition: background 0.3s;
             border: 1px solid #FFE69C;
         }
-        .btn-cancel:hover {
-            background: #FFE69C;
-        }
+        .btn-cancel:hover { background: #FFE69C; }
 
         /* 消息提示 */
         .msg-toast {
@@ -133,57 +125,56 @@
 
     <%-- 操作结果消息提示 --%>
     <c:if test="${not empty param.msg}">
-        <div class="msg-toast ${param.msg eq '订单已取消' ? 'msg-success' : 'msg-error'}">
-            ${param.msg eq '订单已取消' ? '✅' : '⚠️'} ${param.msg}
+        <div class="msg-toast ${param.msg eq '取消成功' ? 'msg-success' : 'msg-error'}">
+                ${param.msg eq '取消成功' ? '✅' : '⚠️'} ${param.msg}
         </div>
     </c:if>
 
     <c:choose>
-        <%-- ⭐ 没有预约记录 --%>
+        <%-- ⭐ 如果 orderList 是空的，显示这里 --%>
         <c:when test="${empty requestScope.orderList}">
             <div class="empty-state">
                 <div class="icon">🐶</div>
-                <p>
-                    暂无预约记录<br>
-                    快去给毛孩子预约服务吧！
-                </p>
+                <p>暂无预约记录<br>快去给毛孩子预约服务吧！</p>
                 <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list" class="btn-service">🎯 浏览服务项目</a>
             </div>
         </c:when>
 
-        <%-- ⭐ 有预约数据 --%>
+        <%-- ⭐ 如果有数据，循环显示卡片 --%>
         <c:otherwise>
             <div class="order-grid">
                 <c:forEach items="${requestScope.orderList}" var="order">
                     <div class="order-card">
                         <h3 class="service-name">${order.serviceTitle}</h3>
-                        <p class="meta">👤 用户：<span>${order.username}</span></p>
+                            <%-- 如果联查没查出username，就用当前登录的 sessionScope.user.username 兜底 --%>
+                        <p class="meta">👤 用户：<span>${not empty order.username ? order.username : sessionScope.user.username}</span></p>
                         <p class="meta">🐾 宠物：<span>${order.petName}</span></p>
                         <p class="meta">⏰ 预约时间：<span>${fn:replace(order.appointTime, 'T', ' ')}</span></p>
-                        <p class="meta">📅 下单时间：<span>${fn:replace(order.createTime, 'T', ' ')}</span></p>
                         <div class="price">¥${order.price}</div>
 
-                        <%-- 订单状态标签 --%>
-                        <c:if test="${order.status == '待接单'}">
-                            <span class="status-badge status-pending">⏳ 待接单</span>
-                        </c:if>
-                        <c:if test="${order.status == '已接单'}">
-                            <span class="status-badge status-accepted">✅ 商家已接单</span>
-                        </c:if>
-                        <c:if test="${order.status == '服务中'}">
-                            <span class="status-badge status-accepted">🔧 服务中</span>
-                        </c:if>
-                        <c:if test="${order.status == '已完成'}">
-                            <span class="status-badge status-done">✔️ 已完成</span>
-                        </c:if>
-                        <c:if test="${order.status == '已取消'}">
-                            <span class="status-badge status-done">❌ 已取消</span>
-                        </c:if>
+                            <%-- 根据数据库中文状态值显示对应的标签 --%>
+                        <c:choose>
+                            <c:when test="${order.status == '待接单'}">
+                                <span class="status-badge status-pending">⏳ 待接单</span>
+                            </c:when>
+                            <c:when test="${order.status == '已接单'}">
+                                <span class="status-badge status-accepted">✅ 商家已接单</span>
+                            </c:when>
+                            <c:when test="${order.status == '服务中'}">
+                                <span class="status-badge status-accepted">🔧 服务中</span>
+                            </c:when>
+                            <c:when test="${order.status == '已完成'}">
+                                <span class="status-badge status-done">✔️ 已完成</span>
+                            </c:when>
+                            <c:when test="${order.status == '已取消'}">
+                                <span class="status-badge status-done" style="text-decoration: line-through;">❌ 已取消</span>
+                            </c:when>
+                        </c:choose>
 
-                        <%-- 取消预约按钮（仅待接单状态可取消） --%>
+                            <%-- 取消预约按钮（仅"待接单"状态可取消） --%>
                         <c:if test="${order.status == '待接单'}">
                             <div style="margin-top: 12px;">
-                                <a href="${pageContext.request.contextPath}/orderServlet?action=cancelOrder&orderId=${order.id}"
+                                <a href="${pageContext.request.contextPath}/OrderServlet?action=cancelOrder&orderId=${order.id}"
                                    class="btn-cancel"
                                    onclick="return confirm('确定要取消这个预约吗？')">
                                     🗑️ 取消预约

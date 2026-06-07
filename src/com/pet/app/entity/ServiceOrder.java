@@ -11,10 +11,12 @@ public class ServiceOrder {
     private Double price;         // 服务价格快照
     private String description;   // 服务描述快照
     private String serviceTitle;  // 服务名称（联表查询从 service_item 获取）
-    private String petName;       // 宠物名称（联表查询从 sys_pet 获取）
+    private String petName;       // 宠物名称（联表查询从 sys_pet 或 pet_info 获取）
     private String username;      // 用户名（联表查询从 sys_user 获取）
     private LocalDateTime appointTime;     // 预约服务时间
-    private String status;        // 状态：待接单, 已接单, 服务中, 已完成, 已取消
+
+    private String status;  // 状态：待接单/已接单/已完成/已取消
+
     private LocalDateTime createTime;
 
     public ServiceOrder() {}

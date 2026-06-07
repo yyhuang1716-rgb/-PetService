@@ -175,6 +175,7 @@ public class OrderServlet extends HttpServlet {
                 order.setDescription(serviceItem.getDescription());
             }
             order.setAppointTime(appointTime);
+            // 新创建的订单状态默认为"待接单"
             order.setStatus("待接单");
 
             // 调用 Service 层插入订单

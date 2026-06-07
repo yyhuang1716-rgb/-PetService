@@ -12,7 +12,7 @@ public class PetDao extends BaseDao {
      * @return 影响的行数，大于 0 说明成功
      */
     public int savePet(Pet pet) {
-        String sql = "INSERT INTO sys_pet(user_id, name, type, age, weight) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO pet_info(user_id, name, type, age, weight) VALUES(?, ?, ?, ?, ?)";
         return update(sql, pet.getUserId(), pet.getName(), pet.getType(), pet.getAge(), pet.getWeight());
     }
 
@@ -22,7 +22,7 @@ public class PetDao extends BaseDao {
      * @return 返回 null 说明没有找到该宠物
      */
     public Pet queryPetById(Integer id) {
-        String sql = "SELECT id, user_id userId, name, type, age, weight, create_time createTime FROM sys_pet WHERE id = ?";
+        String sql = "SELECT id, user_id userId, name, type, age, weight, create_time createTime FROM pet_info WHERE id = ?";
         return queryForOne(Pet.class, sql, id);
     }
 
@@ -32,7 +32,7 @@ public class PetDao extends BaseDao {
      * @return 宠物列表，可能为空
      */
     public List<Pet> queryPetsByUserId(Integer userId) {
-        String sql = "SELECT id, user_id userId, name, type, age, weight, create_time createTime FROM sys_pet WHERE user_id = ?";
+        String sql = "SELECT id, user_id userId, name, type, age, weight, create_time createTime FROM pet_info WHERE user_id = ?";
         return queryForList(Pet.class, sql, userId);
     }
 
@@ -42,7 +42,7 @@ public class PetDao extends BaseDao {
      * @return 影响的行数，大于 0 说明成功
      */
     public int updatePet(Pet pet) {
-        String sql = "UPDATE sys_pet SET name = ?, type = ?, age = ?, weight = ? WHERE id = ?";
+        String sql = "UPDATE pet_info SET name = ?, type = ?, age = ?, weight = ? WHERE id = ?";
         return update(sql, pet.getName(), pet.getType(), pet.getAge(), pet.getWeight(), pet.getId());
     }
 
@@ -52,7 +52,7 @@ public class PetDao extends BaseDao {
      * @return 影响的行数，大于 0 说明成功
      */
     public int deletePetById(Integer id) {
-        String sql = "DELETE FROM sys_pet WHERE id = ?";
+        String sql = "DELETE FROM pet_info WHERE id = ?";
         return update(sql, id);
     }
 }

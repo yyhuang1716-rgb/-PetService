@@ -39,9 +39,6 @@ public class ServiceOrderService {
 
     /**
      * 业务：更新订单状态
-     * @param orderId 订单ID
-     * @param newStatus 新状态（待接单, 已接单, 服务中, 已完成, 已取消）
-     * @return true 表示更新成功
      */
     public boolean updateOrderStatus(Integer orderId, String newStatus) {
         int rows = serviceOrderDao.updateOrderStatus(orderId, newStatus);
@@ -50,8 +47,6 @@ public class ServiceOrderService {
 
     /**
      * 业务：取消订单
-     * @param orderId 订单ID
-     * @return true 表示取消成功
      */
     public boolean cancelOrder(Integer orderId) {
         return updateOrderStatus(orderId, "已取消");
