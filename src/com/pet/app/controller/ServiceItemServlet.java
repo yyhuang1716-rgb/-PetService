@@ -37,6 +37,8 @@ public class ServiceItemServlet extends HttpServlet {
             addService(req, resp);
         } else if ("delete".equals(action)) {
             deleteService(req, resp);
+        } else if ("manageList".equals(action)) {
+            manageList(req, resp);
         } else {
             listServices(req, resp); // 默认查询列表
         }
@@ -80,6 +82,15 @@ public class ServiceItemServlet extends HttpServlet {
             // 存完之后，重定向到列表页刷新数据
             resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list");
         }
+    }
+
+    /**
+     * 商家后台 - 服务项目管理列表
+     */
+    private void manageList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<ServiceItem> serviceList = serviceItemService.getAllServices();
+        req.setAttribute("serviceList", serviceList);
+        req.getRequestDispatcher("/view/merchant/service_manage.jsp").forward(req, resp);
     }
 
     /**
