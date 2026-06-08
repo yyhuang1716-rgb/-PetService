@@ -54,7 +54,7 @@
         }
         tr:last-child td { border-bottom: none; }
         tr:hover { background: #F8FFF8; }
-
+/* 状态标签样式 */
         /* 状态标签 */
         .status-badge {
             display: inline-block;
