@@ -35,8 +35,14 @@ public class UserServlet extends HttpServlet {
             if (loginUser != null) {
                 // 登录成功：把用户信息存进 Session（这样后续在这个浏览器里就能一直保持登录状态了）
                 req.getSession().setAttribute("user", loginUser);
-                // 跳转到宠物列表页面
-                resp.sendRedirect(req.getContextPath() + "/petServlet?action=list");
+                // 根据角色分流：0-普通用户跳转宠物列表，1-商家跳转首页
+                if (loginUser.getRole() == 0) {
+                    resp.sendRedirect(req.getContextPath() + "/petServlet?action=list");
+                } else if (loginUser.getRole() == 1) {
+                    resp.sendRedirect(req.getContextPath() + "/index.jsp");
+                } else {
+                    resp.sendRedirect(req.getContextPath() + "/index.jsp");
+                }
             } else {
                 // 登录失败：跳转回登录页并显示错误信息
                 req.setAttribute("error", "用户名或密码错误！");
