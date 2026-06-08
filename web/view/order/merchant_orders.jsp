@@ -142,19 +142,19 @@
                         </td>
                         <td>
                             <c:choose>
-                                <c:when test="${order.status == 0}">
+                                <c:when test="${order.status == '待接单'}">
                                     <span class="status-badge status-pending">⏳ 待接单</span>
                                 </c:when>
-                                <c:when test="${order.status == 1}">
+                                <c:when test="${order.status == '已接单'}">
                                     <span class="status-badge status-accepted">✅ 已接单</span>
                                 </c:when>
-                                <c:when test="${order.status == 2}">
+                                <c:when test="${order.status == '服务中'}">
                                     <span class="status-badge status-service">🔧 服务中</span>
                                 </c:when>
-                                <c:when test="${order.status == 3}">
+                                <c:when test="${order.status == '已完成'}">
                                     <span class="status-badge status-done">✔️ 已完成</span>
                                 </c:when>
-                                <c:when test="${order.status == 4}">
+                                <c:when test="${order.status == '已取消'}">
                                     <span class="status-badge status-cancel">❌ 已取消</span>
                                 </c:when>
                                 <c:otherwise>
@@ -163,11 +163,11 @@
                             </c:choose>
                         </td>
                         <td>
-                            <c:if test="${order.status == 0}">
+                            <c:if test="${order.status == '待接单'}">
                                 <a href="${pageContext.request.contextPath}/orderServlet?action=acceptOrder&orderId=${order.id}"
                                    class="btn-accept">接单</a>
                             </c:if>
-                            <c:if test="${order.status != 0}">
+                            <c:if test="${order.status != '待接单'}">
                                 <span style="color: #999; font-size: 13px;">-</span>
                             </c:if>
                         </td>

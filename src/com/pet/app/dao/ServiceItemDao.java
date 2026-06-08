@@ -46,13 +46,23 @@ public class ServiceItemDao extends BaseDao {
     }
 
     /**
+     * 根据关键字模糊查询服务项目（按名称）
+     * @param keyword 搜索关键字
+     * @return 服务项目列表
+     */
+    public List<ServiceItem> queryServicesByKeyword(String keyword) {
+        String sql = "SELECT id, merchant_id merchantId, title, type, price, description, create_time createTime FROM service_item WHERE title LIKE ? ORDER BY id ASC";
+        return queryForList(ServiceItem.class, sql, "%" + keyword + "%");
+    }
+
+    /**
      * 更新服务项目信息
      * @param serviceItem 包含更新后的服务项目对象
      * @return 影响的行数，大于 0 说明成功
      */
     public int updateService(ServiceItem serviceItem) {
-        String sql = "UPDATE service_item SET title = ?, price = ?, description = ? WHERE id = ?";
-        return update(sql, serviceItem.getTitle(), serviceItem.getPrice(), serviceItem.getDescription(), serviceItem.getId());
+        String sql = "UPDATE service_item SET title = ?, type = ?, price = ?, description = ? WHERE id = ?";
+        return update(sql, serviceItem.getTitle(), serviceItem.getType(), serviceItem.getPrice(), serviceItem.getDescription(), serviceItem.getId());
     }
 
     /**

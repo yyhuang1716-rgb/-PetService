@@ -335,10 +335,10 @@
         <!-- 工具栏 -->
         <div class="toolbar">
             <a href="${pageContext.request.contextPath}/serviceItemServlet?action=toAdd" class="btn-add">＋ 发布新服务</a>
-            <div class="search-box">
-                <input type="text" placeholder="搜索服务名称..." disabled>
-                <button onclick="alert('🔍 搜索功能即将上线')">搜索</button>
-            </div>
+            <form action="${pageContext.request.contextPath}/serviceItemServlet?action=manageList" method="post" class="search-box">
+                <input type="text" name="keyword" placeholder="搜索服务名称..." value="${param.keyword}">
+                <button type="submit">🔍 搜索</button>
+            </form>
         </div>
 
         <!-- 服务列表 -->

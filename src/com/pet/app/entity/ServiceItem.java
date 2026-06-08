@@ -6,6 +6,7 @@ public class ServiceItem {
     private Integer id;
     private Integer merchantId;   // 所属商家ID
     private String title;         // 服务名称
+    private String type;          // 服务类型
     private Double price;         // 服务价格
     private String description;   // 详细描述
     private LocalDateTime createTime;
@@ -20,6 +21,12 @@ public class ServiceItem {
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public String getName() { return title; }
+    public void setName(String name) { this.title = name; }
 
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }

@@ -193,7 +193,7 @@
 
                 <div class="form-group">
                     <label>服务名称 <span class="required">*</span></label>
-                    <input type="text" name="title" class="form-control" value="${serviceItem.title}" placeholder="例如：高级犬类美容" required>
+                    <input type="text" name="name" class="form-control" value="${serviceItem.name}" placeholder="例如：高级犬类美容" required>
                 </div>
 
                 <div class="form-group">

@@ -185,7 +185,7 @@ public class OrderServlet extends HttpServlet {
     private void acceptOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
-            serviceOrderService.updateOrderStatus(orderId, 1);
+            serviceOrderService.updateOrderStatus(orderId, "已接单");
             resp.sendRedirect(req.getContextPath() + "/orderServlet?action=manageList");
         } catch (NumberFormatException e) {
             e.printStackTrace();

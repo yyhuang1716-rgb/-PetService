@@ -101,7 +101,13 @@ public class ServiceItemServlet extends HttpServlet {
      * 商家后台 - 服务项目管理列表
      */
     private void manageList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<ServiceItem> serviceList = serviceItemService.getAllServices();
+        String keyword = req.getParameter("keyword");
+        List<ServiceItem> serviceList;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            serviceList = serviceItemService.getServicesByKeyword(keyword.trim());
+        } else {
+            serviceList = serviceItemService.getAllServices();
+        }
         req.setAttribute("serviceList", serviceList);
         req.getRequestDispatcher("/view/merchant/service_manage.jsp").forward(req, resp);
     }
@@ -138,13 +144,15 @@ public class ServiceItemServlet extends HttpServlet {
         String idStr = req.getParameter("id");
         if (idStr != null && !idStr.isEmpty()) {
             int id = Integer.parseInt(idStr);
-            String title = req.getParameter("title");
+            String name = req.getParameter("name");
+            String type = req.getParameter("type");
             double price = Double.parseDouble(req.getParameter("price"));
             String description = req.getParameter("description");
 
             ServiceItem serviceItem = new ServiceItem();
             serviceItem.setId(id);
-            serviceItem.setTitle(title);
+            serviceItem.setName(name);
+            serviceItem.setType(type);
             serviceItem.setPrice(price);
             serviceItem.setDescription(description);
 

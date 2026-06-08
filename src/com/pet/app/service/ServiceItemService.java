@@ -36,6 +36,15 @@ public class ServiceItemService {
     }
 
     /**
+     * 业务：根据关键字模糊查询服务项目
+     * @param keyword 搜索关键字
+     * @return 服务项目列表
+     */
+    public List<ServiceItem> getServicesByKeyword(String keyword) {
+        return serviceItemDao.queryServicesByKeyword(keyword);
+    }
+
+    /**
      * 业务：添加服务项目
      * @param serviceItem 服务项目对象
      * @return true 表示添加成功，false 表示添加失败
