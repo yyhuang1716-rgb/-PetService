@@ -403,7 +403,7 @@
 
                 <!-- 查看客户评价 -->
                 <div class="qa-card qa-purple"
-                     onclick="alert('💬 客户评价功能正在建设中，敬请期待！')">
+                     onclick="location.href='${pageContext.request.contextPath}/reviewServlet?action=merchantList'">
                     <div class="qa-icon">💬</div>
                     <div class="qa-info">
                         <div class="qa-label">查看客户评价</div>

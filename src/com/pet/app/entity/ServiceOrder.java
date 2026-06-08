@@ -16,7 +16,12 @@ public class ServiceOrder {
     private String username;      // 用户名（联表查询从 sys_user 获取）
     private LocalDateTime appointTime;     // 预约服务时间
 
-    private String status;  // 状态：待接单/已接单/已完成/已取消
+    private Integer status;  // 状态：0待接单, 1已接单, 2服务中, 3已完成, 4已取消, 5已评价
+
+    // 评价相关字段（联表查询时使用）
+    private Integer rating;
+    private String reviewContent;
+    private LocalDateTime reviewTime;
 
     private LocalDateTime createTime;
 
@@ -58,9 +63,18 @@ public class ServiceOrder {
     public LocalDateTime getAppointTime() { return appointTime; }
     public void setAppointTime(LocalDateTime appointTime) { this.appointTime = appointTime; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public Integer getStatus() { return status; }
+    public void setStatus(Integer status) { this.status = status; }
 
     public LocalDateTime getCreateTime() { return createTime; }
     public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
+
+    public Integer getRating() { return rating; }
+    public void setRating(Integer rating) { this.rating = rating; }
+
+    public String getReviewContent() { return reviewContent; }
+    public void setReviewContent(String reviewContent) { this.reviewContent = reviewContent; }
+
+    public LocalDateTime getReviewTime() { return reviewTime; }
+    public void setReviewTime(LocalDateTime reviewTime) { this.reviewTime = reviewTime; }
 }

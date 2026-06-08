@@ -6,7 +6,9 @@ import com.pet.app.entity.Pet;
 import com.pet.app.entity.ServiceItem;
 import com.pet.app.entity.ServiceOrder;
 import com.pet.app.entity.User;
+import com.pet.app.entity.UserReview;
 import com.pet.app.service.ServiceOrderService;
+import com.pet.app.service.UserReviewService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,6 +28,7 @@ public class OrderServlet extends HttpServlet {
     private PetDao petDao = new PetDao();
     private ServiceItemDao serviceItemDao = new ServiceItemDao();
     private ServiceOrderService serviceOrderService = new ServiceOrderService();
+    private UserReviewService userReviewService = new UserReviewService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -54,6 +57,12 @@ public class OrderServlet extends HttpServlet {
             manageList(req, resp);
         } else if ("acceptOrder".equals(action)) {
             acceptOrder(req, resp);
+        } else if ("completeOrder".equals(action)) {
+            completeOrder(req, resp);
+        } else if ("toReview".equals(action)) {
+            toReview(req, resp);
+        } else if ("submitReview".equals(action)) {
+            submitReview(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list");
         }
@@ -185,7 +194,7 @@ public class OrderServlet extends HttpServlet {
     private void acceptOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
-            serviceOrderService.updateOrderStatus(orderId, "已接单");
+            serviceOrderService.updateOrderStatus(orderId, 1);
             resp.sendRedirect(req.getContextPath() + "/orderServlet?action=manageList");
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -193,6 +202,73 @@ public class OrderServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             resp.sendRedirect(req.getContextPath() + "/orderServlet?action=manageList");
+        }
+    }
+
+    /**
+     * 商家完成服务，将订单状态更新为 已完成
+     */
+    private void completeOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            int orderId = Integer.parseInt(req.getParameter("orderId"));
+            serviceOrderService.updateOrderStatus(orderId, 3);
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=manageList");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=manageList");
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=manageList");
+        }
+    }
+
+    /**
+     * 跳转到评价页面
+     */
+    private void toReview(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("orderId", req.getParameter("orderId"));
+        req.getRequestDispatcher("/view/order/review_add.jsp").forward(req, resp);
+    }
+
+    /**
+     * 提交评价
+     * 保存评价内容，同时将订单状态更新为 已评价
+     */
+    private void submitReview(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/view/user/login.jsp");
+            return;
+        }
+
+        try {
+            int orderId = Integer.parseInt(req.getParameter("orderId"));
+            int rating = Integer.parseInt(req.getParameter("rating"));
+            String content = req.getParameter("content");
+
+            // 创建评价对象
+            UserReview review = new UserReview();
+            review.setOrderId(orderId);
+            review.setRating(rating);
+            review.setContent(content);
+
+            boolean reviewOk = userReviewService.submitReview(review);
+
+            if (reviewOk) {
+                // 将订单状态更新为 已评价
+                serviceOrderService.updateOrderStatus(orderId, 5);
+                resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("评价成功，感谢您的反馈！", "UTF-8"));
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("评价提交失败，请重试", "UTF-8"));
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("参数错误", "UTF-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("服务器异常，请稍后重试", "UTF-8"));
         }
     }
 
@@ -240,7 +316,7 @@ public class OrderServlet extends HttpServlet {
             }
             order.setAppointTime(appointTime);
             // 新创建的订单状态默认为"待接单"
-            order.setStatus("待接单");
+            order.setStatus(0);
 
             // 调用 Service 层插入订单
             boolean success = serviceOrderService.createOrder(order);

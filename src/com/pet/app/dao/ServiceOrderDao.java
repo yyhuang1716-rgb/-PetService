@@ -29,11 +29,13 @@ public class ServiceOrderDao extends BaseDao {
                 "so.title, so.price, so.description, so.remark, so.appoint_time appointTime, so.status, so.create_time createTime, " +
                 "si.title AS serviceTitle, " +
                 "pi.name AS petName, " +
-                "u.username AS username " +
+                "u.username AS username, " +
+                "ur.rating AS rating, ur.content AS reviewContent, ur.create_time AS reviewTime " +
                 "FROM service_order so " +
                 "LEFT JOIN service_item si ON so.service_id = si.id " +
                 "LEFT JOIN pet_info pi ON so.pet_id = pi.id " + // ← 这里改成了正确的宠物表名
                 "LEFT JOIN sys_user u ON so.user_id = u.id " +
+                "LEFT JOIN user_review ur ON so.id = ur.order_id " +
                 "WHERE so.user_id = ? ORDER BY so.create_time DESC";
         return queryForList(ServiceOrder.class, sql, userId);
     }
@@ -41,7 +43,7 @@ public class ServiceOrderDao extends BaseDao {
     /**
      * 更新订单状态
      */
-    public int updateOrderStatus(Integer id, String status) {
+    public int updateOrderStatus(Integer id, Integer status) {
         String sql = "UPDATE service_order SET status = ? WHERE id = ?";
         return update(sql, status, id);
     }
@@ -50,7 +52,7 @@ public class ServiceOrderDao extends BaseDao {
      * 取消订单
      */
     public int cancelOrder(Integer id) {
-        return updateOrderStatus(id, "已取消");
+        return updateOrderStatus(id, 4);
     }
 
     /**
@@ -69,20 +71,54 @@ public class ServiceOrderDao extends BaseDao {
                 "so.title, so.price, so.description, so.remark, so.appoint_time appointTime, so.status, so.create_time createTime, " +
                 "si.title AS serviceTitle, " +
                 "pi.name AS petName, " +
-                "u.username AS username " +
+                "u.username AS username, " +
+                "ur.rating AS rating, ur.content AS reviewContent, ur.create_time AS reviewTime " +
                 "FROM service_order so " +
                 "LEFT JOIN service_item si ON so.service_id = si.id " +
                 "LEFT JOIN pet_info pi ON so.pet_id = pi.id " +
                 "LEFT JOIN sys_user u ON so.user_id = u.id " +
+                "LEFT JOIN user_review ur ON so.id = ur.order_id " +
                 "ORDER BY so.create_time DESC";
         return queryForList(ServiceOrder.class, sql);
     }
 
     /**
-     * 更新订单状态（使用数值状态）
+     * 查询商家所有的已完成评价订单（含评分和评价内容）
      */
-    public int updateOrderStatus(Integer id, Integer status) {
-        String sql = "UPDATE service_order SET status = ? WHERE id = ?";
-        return update(sql, status, id);
+    public java.util.List<ServiceOrder> queryReviewedOrdersByMerchantId(Integer merchantId) {
+        String sql = "SELECT so.id, so.user_id userId, so.pet_id petId, so.service_id serviceId, " +
+                "so.title, so.price, so.description, so.remark, so.appoint_time appointTime, so.status, so.create_time createTime, " +
+                "si.title AS serviceTitle, " +
+                "pi.name AS petName, " +
+                "u.username AS username, " +
+                "ur.rating AS rating, ur.content AS reviewContent, ur.create_time AS reviewTime " +
+                "FROM service_order so " +
+                "INNER JOIN user_review ur ON so.id = ur.order_id " +
+                "LEFT JOIN service_item si ON so.service_id = si.id " +
+                "LEFT JOIN pet_info pi ON so.pet_id = pi.id " +
+                "LEFT JOIN sys_user u ON so.user_id = u.id " +
+                "WHERE si.merchant_id = ? " +
+                "ORDER BY ur.create_time DESC";
+        return queryForList(ServiceOrder.class, sql, merchantId);
+    }
+
+    /**
+     * 查询当前用户所有已评价的订单（含评分和评价内容）
+     */
+    public java.util.List<ServiceOrder> queryReviewedOrdersByUserId(Integer userId) {
+        String sql = "SELECT so.id, so.user_id userId, so.pet_id petId, so.service_id serviceId, " +
+                "so.title, so.price, so.description, so.remark, so.appoint_time appointTime, so.status, so.create_time createTime, " +
+                "si.title AS serviceTitle, " +
+                "pi.name AS petName, " +
+                "u.username AS username, " +
+                "ur.rating AS rating, ur.content AS reviewContent, ur.create_time AS reviewTime " +
+                "FROM service_order so " +
+                "INNER JOIN user_review ur ON so.id = ur.order_id " +
+                "LEFT JOIN service_item si ON so.service_id = si.id " +
+                "LEFT JOIN pet_info pi ON so.pet_id = pi.id " +
+                "LEFT JOIN sys_user u ON so.user_id = u.id " +
+                "WHERE so.user_id = ? " +
+                "ORDER BY ur.create_time DESC";
+        return queryForList(ServiceOrder.class, sql, userId);
     }
 }

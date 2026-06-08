@@ -164,25 +164,28 @@
 
                             <%-- 根据数据库中文状态值显示对应的标签 --%>
                         <c:choose>
-                            <c:when test="${order.status == '待接单'}">
+                            <c:when test="${order.status == 0}">
                                 <span class="status-badge status-pending">⏳ 待接单</span>
                             </c:when>
-                            <c:when test="${order.status == '已接单'}">
+                            <c:when test="${order.status == 1}">
                                 <span class="status-badge status-accepted">✅ 商家已接单</span>
                             </c:when>
-                            <c:when test="${order.status == '服务中'}">
+                            <c:when test="${order.status == 2}">
                                 <span class="status-badge status-accepted">🔧 服务中</span>
                             </c:when>
-                            <c:when test="${order.status == '已完成'}">
+                            <c:when test="${order.status == 3}">
                                 <span class="status-badge status-done">✔️ 已完成</span>
                             </c:when>
-                            <c:when test="${order.status == '已取消'}">
+                            <c:when test="${order.status == 5}">
+                                <span class="status-badge status-done">⭐ 已评价</span>
+                            </c:when>
+                            <c:when test="${order.status == 4}">
                                 <span class="status-badge status-done" style="text-decoration: line-through;">❌ 已取消</span>
                             </c:when>
                         </c:choose>
 
                             <%-- 取消预约按钮（仅"待接单"状态可取消） --%>
-                        <c:if test="${order.status == '待接单'}">
+                        <c:if test="${order.status == 0}">
                             <div style="margin-top: 12px;">
                                 <a href="${pageContext.request.contextPath}/orderServlet?action=cancelOrder&orderId=${order.id}"
                                    class="btn-cancel"
@@ -190,6 +193,34 @@
                                     🗑️ 取消预约
                                 </a>
                             </div>
+                        </c:if>
+
+                            <%-- 已完成 → 去评价；已评价 → 纯文本 --%>
+                        <c:if test="${order.status == 3}">
+                            <div style="margin-top: 12px;">
+                                <a href="${pageContext.request.contextPath}/orderServlet?action=toReview&orderId=${order.id}"
+                                   style="display: inline-block; background: #06C270; color: white; text-decoration: none; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; transition: background 0.3s;">
+                                    📝 去评价
+                                </a>
+                            </div>
+                        </c:if>
+                        <c:if test="${order.status == 5}">
+                            <div style="margin-top: 12px; color: #06C270; font-size: 14px; font-weight: bold;">✅ 已评价</div>
+                            <c:if test="${not empty order.rating}">
+                                <div style="margin-top: 6px; color: #FFD166; font-size: 18px; letter-spacing: 2px;">
+                                    <c:forEach begin="1" end="5" var="i">
+                                        <c:choose>
+                                            <c:when test="${i <= order.rating}">★</c:when>
+                                            <c:otherwise><span style="color: #DDD;">★</span></c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty order.reviewContent}">
+                                <div style="margin-top: 6px; padding: 8px 12px; background: #F0FFF4; border-left: 3px solid #06C270; border-radius: 6px; font-size: 13px; color: #333; line-height: 1.5;">
+                                        ${order.reviewContent}
+                                </div>
+                            </c:if>
                         </c:if>
                     </div>
                 </c:forEach>

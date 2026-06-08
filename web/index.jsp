@@ -623,8 +623,9 @@
             <a href="${pageContext.request.contextPath}/">首页</a>
             <c:choose>
                 <c:when test="${not empty sessionScope.user && sessionScope.user.role == 1}">
-                    <a href="#">服务管理</a>
-                    <a href="#">订单管理</a>
+                    <a href="${pageContext.request.contextPath}/view/merchant/home.jsp">商家工作台</a>
+                    <a href="${pageContext.request.contextPath}/orderServlet?action=manageList">订单管理</a>
+                    <a href="${pageContext.request.contextPath}/serviceItemServlet?action=manageList">服务管理</a>
                 </c:when>
                 <c:when test="${not empty sessionScope.user && sessionScope.user.role == 2}">
                     <a href="#">用户管理</a>
@@ -684,9 +685,9 @@
                     <a href="${pageContext.request.contextPath}/petServlet?action=list" class="btn-book">查看我的宠物</a>
                 </c:when>
                 <c:when test="${sessionScope.user.role == 1}">
-                    <h1>商家工作台</h1>
-                    <p>管理您的服务项目，处理客户订单，提升服务质量。</p>
-                    <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list" class="btn-book">管理服务项目</a>
+                    <h1>欢迎回来，<c:out value="${sessionScope.user.username}" />！</h1>
+                    <p>进入商家工作台，管理服务项目与客户订单。</p>
+                    <a href="${pageContext.request.contextPath}/view/merchant/home.jsp" class="btn-book">进入商家工作台</a>
                 </c:when>
                 <c:otherwise>
                     <h1>管理平台</h1>
@@ -722,7 +723,7 @@
                             <h3>我的收藏</h3>
                             <p>收藏的服务和商家</p>
                         </div>
-                        <div class="action-card">
+                        <div class="action-card" onclick="window.location.href='${pageContext.request.contextPath}/reviewServlet?action=myReviews'">
                             <div class="icon">💬</div>
                             <h3>我的评价</h3>
                             <p>查看历史评价</p>
@@ -735,28 +736,13 @@
                     </div>
                 </c:when>
                 <c:when test="${sessionScope.user.role == 1}">
-                    <h2 class="section-title">商家功能</h2>
-                    <div class="actions-grid">
-                        <div class="action-card merchant-action">
-                            <div class="icon">📋</div>
-                            <h3>订单管理</h3>
-                            <p>处理客户订单</p>
-                        </div>
-                        <div class="action-card merchant-action">
-                            <div class="icon">✂️</div>
-                            <h3>服务管理</h3>
-                            <p>管理服务项目</p>
-                        </div>
-                        <div class="action-card merchant-action">
-                            <div class="icon">📊</div>
-                            <h3>数据统计</h3>
-                            <p>查看经营数据</p>
-                        </div>
-                        <div class="action-card merchant-action">
-                            <div class="icon">💼</div>
-                            <h3>店铺设置</h3>
-                            <p>店铺信息管理</p>
-                        </div>
+                    <h2 class="section-title">商家工作台</h2>
+                    <div style="text-align:center; padding: 40px;">
+                        <p style="font-size:18px; color:#666; margin-bottom:24px;">商家请前往独立工作台进行管理操作</p>
+                        <a href="${pageContext.request.contextPath}/view/merchant/home.jsp"
+                           style="display:inline-block; background:#06C270; color:#fff; padding:14px 48px; border-radius:32px; font-size:18px; font-weight:bold; text-decoration:none;">
+                            🚀 进入商家工作台
+                        </a>
                     </div>
                 </c:when>
                 <c:otherwise>

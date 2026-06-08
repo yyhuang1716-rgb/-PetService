@@ -73,6 +73,10 @@ public class UserServlet extends HttpServlet {
                 req.setAttribute("error", "该用户名已经被占用了！");
                 req.getRequestDispatcher("/view/user/register.jsp").forward(req, resp);
             }
+        } else if ("logout".equals(action)) {
+            // ==== 处理退出登录请求 ====
+            req.getSession().invalidate();
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
         }
     }
 

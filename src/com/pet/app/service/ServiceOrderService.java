@@ -40,7 +40,7 @@ public class ServiceOrderService {
     /**
      * 业务：更新订单状态
      */
-    public boolean updateOrderStatus(Integer orderId, String newStatus) {
+    public boolean updateOrderStatus(Integer orderId, Integer newStatus) {
         int rows = serviceOrderDao.updateOrderStatus(orderId, newStatus);
         return rows > 0;
     }
@@ -49,7 +49,7 @@ public class ServiceOrderService {
      * 业务：取消订单
      */
     public boolean cancelOrder(Integer orderId) {
-        return updateOrderStatus(orderId, "已取消");
+        return updateOrderStatus(orderId, 4);
     }
 
     /**
@@ -67,9 +67,16 @@ public class ServiceOrderService {
     }
 
     /**
-     * 业务：更新订单状态（数值）
+     * 业务：查询商家所有已评价订单（含评分和评价内容）
      */
-    public boolean updateOrderStatus(Integer orderId, Integer status) {
-        return serviceOrderDao.updateOrderStatus(orderId, status) > 0;
+    public java.util.List<ServiceOrder> getReviewedOrdersByMerchantId(Integer merchantId) {
+        return serviceOrderDao.queryReviewedOrdersByMerchantId(merchantId);
+    }
+
+    /**
+     * 业务：查询当前用户所有已评价订单（含评分和评价内容）
+     */
+    public java.util.List<ServiceOrder> getReviewedOrdersByUserId(Integer userId) {
+        return serviceOrderDao.queryReviewedOrdersByUserId(userId);
     }
 }
