@@ -381,7 +381,7 @@
             <div class="qa-grid">
                 <!-- 发布新服务 -->
                 <div class="qa-card qa-pink"
-                     onclick="location.href='${pageContext.request.contextPath}/serviceItemServlet?action=manageList'">
+                     onclick="location.href='${pageContext.request.contextPath}/serviceItemServlet?action=toAdd'">
                     <div class="qa-icon">📢</div>
                     <div class="qa-info">
                         <div class="qa-label">发布新服务</div>

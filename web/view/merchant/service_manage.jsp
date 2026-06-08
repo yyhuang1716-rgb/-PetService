@@ -334,7 +334,7 @@
 
         <!-- 工具栏 -->
         <div class="toolbar">
-            <a href="javascript:void(0);" class="btn-add" onclick="alert('📢 发布新服务功能即将上线！')">＋ 发布新服务</a>
+            <a href="${pageContext.request.contextPath}/serviceItemServlet?action=toAdd" class="btn-add">＋ 发布新服务</a>
             <div class="search-box">
                 <input type="text" placeholder="搜索服务名称..." disabled>
                 <button onclick="alert('🔍 搜索功能即将上线')">搜索</button>

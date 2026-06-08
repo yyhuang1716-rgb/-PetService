@@ -35,6 +35,8 @@ public class ServiceItemServlet extends HttpServlet {
             listServices(req, resp);
         } else if ("add".equals(action)) {
             addService(req, resp);
+        } else if ("toAdd".equals(action)) {
+            toAdd(req, resp);
         } else if ("delete".equals(action)) {
             deleteService(req, resp);
         } else if ("manageList".equals(action)) {
@@ -79,9 +81,16 @@ public class ServiceItemServlet extends HttpServlet {
             // 调用 Service 存入数据库
             serviceItemService.addService(serviceItem);
 
-            // 存完之后，重定向到列表页刷新数据
-            resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list");
+            // 存完之后，重定向到商家管理列表页刷新数据
+            resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=manageList");
         }
+    }
+
+    /**
+     * 跳转到商家发布新服务页面
+     */
+    private void toAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/view/merchant/service_add.jsp").forward(req, resp);
     }
 
     /**
