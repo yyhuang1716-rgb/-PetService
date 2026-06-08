@@ -39,6 +39,10 @@ public class ServiceItemServlet extends HttpServlet {
             toAdd(req, resp);
         } else if ("delete".equals(action)) {
             deleteService(req, resp);
+        } else if ("toEdit".equals(action)) {
+            toEdit(req, resp);
+        } else if ("edit".equals(action)) {
+            editService(req, resp);
         } else if ("manageList".equals(action)) {
             manageList(req, resp);
         } else {
@@ -111,6 +115,41 @@ public class ServiceItemServlet extends HttpServlet {
             int id = Integer.parseInt(idStr);
             serviceItemService.deleteService(id);
         }
-        resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list");
+        resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=manageList");
+    }
+
+    /**
+     * 跳转到编辑服务页面
+     */
+    private void toEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idStr = req.getParameter("id");
+        if (idStr != null && !idStr.isEmpty()) {
+            int id = Integer.parseInt(idStr);
+            ServiceItem serviceItem = serviceItemService.getServiceById(id);
+            req.setAttribute("serviceItem", serviceItem);
+        }
+        req.getRequestDispatcher("/view/merchant/service_edit.jsp").forward(req, resp);
+    }
+
+    /**
+     * 提交编辑服务
+     */
+    private void editService(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String idStr = req.getParameter("id");
+        if (idStr != null && !idStr.isEmpty()) {
+            int id = Integer.parseInt(idStr);
+            String title = req.getParameter("title");
+            double price = Double.parseDouble(req.getParameter("price"));
+            String description = req.getParameter("description");
+
+            ServiceItem serviceItem = new ServiceItem();
+            serviceItem.setId(id);
+            serviceItem.setTitle(title);
+            serviceItem.setPrice(price);
+            serviceItem.setDescription(description);
+
+            serviceItemService.updateService(serviceItem);
+        }
+        resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=manageList");
     }
 }

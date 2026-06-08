@@ -357,10 +357,8 @@
                             <div class="svc-price">¥${svc.price}</div>
                             <div class="svc-desc">${not empty svc.description ? svc.description : '暂无描述'}</div>
                             <div class="svc-actions">
-                                <a href="javascript:void(0);" class="svc-btn edit"
-                                   onclick="alert('✏️ 编辑「${svc.title}」功能即将上线')">✏️ 编辑</a>
-                                <a href="javascript:void(0);" class="svc-btn delete"
-                                   onclick="if(confirm('确定要下架「${svc.title}」吗？')) alert('✅ 已下架「${svc.title}」')">🗑️ 下架</a>
+                                <a href="${pageContext.request.contextPath}/serviceItemServlet?action=toEdit&id=${svc.id}" class="svc-btn edit">✏️ 编辑</a>
+                                <a href="javascript:if(confirm('确定要下架该服务吗？')) location.href='${pageContext.request.contextPath}/serviceItemServlet?action=delete&id=${svc.id}'" class="svc-btn delete">🗑️ 下架</a>
                             </div>
                         </div>
                     </c:forEach>
