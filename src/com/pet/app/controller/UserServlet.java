@@ -45,6 +45,12 @@ public class UserServlet extends HttpServlet {
 
         } else if ("register".equals(action)) {
             // ==== 处理注册请求 ====
+            // 仅接受 POST 方式提交注册，直接 GET 访问则转发到注册页面
+            if (!"POST".equalsIgnoreCase(req.getMethod())) {
+                req.getRequestDispatcher("/view/user/register.jsp").forward(req, resp);
+                return;
+            }
+
             User newUser = new User();
             newUser.setUsername(req.getParameter("username"));
             newUser.setPassword(req.getParameter("password"));
