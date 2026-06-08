@@ -39,9 +39,9 @@ public class UserServlet extends HttpServlet {
                 if (loginUser.getRole() == 0) {
                     resp.sendRedirect(req.getContextPath() + "/petServlet?action=list");
                 } else if (loginUser.getRole() == 1) {
-                    resp.sendRedirect(req.getContextPath() + "/index.jsp");
+                    resp.sendRedirect(req.getContextPath() + "/view/merchant/home.jsp");
                 } else {
-                    resp.sendRedirect(req.getContextPath() + "/index.jsp");
+                    resp.sendRedirect(req.getContextPath() + "/view/merchant/home.jsp");
                 }
             } else {
                 // 登录失败：跳转回登录页并显示错误信息
