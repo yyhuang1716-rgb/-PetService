@@ -51,4 +51,11 @@ public class ServiceOrderService {
     public boolean cancelOrder(Integer orderId) {
         return updateOrderStatus(orderId, "已取消");
     }
+
+    /**
+     * 业务：更新订单备注
+     */
+    public boolean updateOrderRemark(Integer orderId, String remark) {
+        return serviceOrderDao.updateOrderRemark(orderId, remark) > 0;
+    }
 }

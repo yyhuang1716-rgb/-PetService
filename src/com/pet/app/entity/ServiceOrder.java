@@ -10,6 +10,7 @@ public class ServiceOrder {
     private String title;         // 服务名称快照（下单时从 service_item 冗余）
     private Double price;         // 服务价格快照
     private String description;   // 服务描述快照
+    private String remark;        // 订单备注
     private String serviceTitle;  // 服务名称（联表查询从 service_item 获取）
     private String petName;       // 宠物名称（联表查询从 sys_pet 或 pet_info 获取）
     private String username;      // 用户名（联表查询从 sys_user 获取）
@@ -41,6 +42,9 @@ public class ServiceOrder {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getRemark() { return remark; }
+    public void setRemark(String remark) { this.remark = remark; }
 
     public String getServiceTitle() { return serviceTitle; }
     public void setServiceTitle(String serviceTitle) { this.serviceTitle = serviceTitle; }

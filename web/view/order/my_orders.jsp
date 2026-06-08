@@ -125,8 +125,8 @@
 
     <%-- 操作结果消息提示 --%>
     <c:if test="${not empty param.msg}">
-        <div class="msg-toast ${param.msg eq '取消成功' ? 'msg-success' : 'msg-error'}">
-                ${param.msg eq '取消成功' ? '✅' : '⚠️'} ${param.msg}
+        <div class="msg-toast ${(param.msg eq '取消成功' || param.msg eq '备注更新成功') ? 'msg-success' : 'msg-error'}">
+                ${(param.msg eq '取消成功' || param.msg eq '备注更新成功') ? '✅' : '⚠️'} ${param.msg}
         </div>
     </c:if>
 
@@ -151,6 +151,16 @@
                         <p class="meta">🐾 宠物：<span>${order.petName}</span></p>
                         <p class="meta">⏰ 预约时间：<span>${fn:replace(order.appointTime, 'T', ' ')}</span></p>
                         <div class="price">¥${order.price}</div>
+
+                            <%-- 备注编辑表单 --%>
+                        <form action="${pageContext.request.contextPath}/orderServlet?action=updateRemark" method="post" style="margin-top: 10px; display: flex; gap: 8px;">
+                            <input type="hidden" name="orderId" value="${order.id}">
+                            <input type="text" name="remark" value="${order.remark}" placeholder="添加或修改备注（如：狗狗怕生）"
+                                   style="flex: 1; padding: 6px 12px; border: 1px solid #DDD; border-radius: 8px; font-size: 13px;">
+                            <button type="submit" style="background: #06C270; color: white; border: none; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer;">
+                                保存
+                            </button>
+                        </form>
 
                             <%-- 根据数据库中文状态值显示对应的标签 --%>
                         <c:choose>

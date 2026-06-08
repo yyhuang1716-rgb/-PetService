@@ -48,6 +48,8 @@ public class OrderServlet extends HttpServlet {
             myOrders(req, resp);
         } else if ("cancelOrder".equals(action)) {
             cancelOrder(req, resp);
+        } else if ("updateRemark".equals(action)) {
+            updateRemark(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list");
         }
@@ -123,6 +125,38 @@ public class OrderServlet extends HttpServlet {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
             boolean result = serviceOrderService.cancelOrder(orderId);
             resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode(result ? "订单已取消" : "取消失败，请重试", "UTF-8"));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("参数错误", "UTF-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("服务器异常，请稍后重试", "UTF-8"));
+        }
+    }
+
+    /**
+     * 更新订单备注
+     */
+    private void updateRemark(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/view/user/login.jsp");
+            return;
+        }
+
+        try {
+            int orderId = Integer.parseInt(req.getParameter("orderId"));
+            String remark = req.getParameter("remark");
+
+            boolean result = serviceOrderService.updateOrderRemark(orderId, remark);
+
+            if (result) {
+                resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("备注更新成功", "UTF-8"));
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("备注更新失败", "UTF-8"));
+            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
             resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("参数错误", "UTF-8"));

@@ -16,7 +16,7 @@ public class ServiceOrderDao extends BaseDao {
      * 根据订单ID查询订单详情
      */
     public ServiceOrder queryOrderById(Integer id) {
-        String sql = "SELECT id, user_id userId, pet_id petId, service_id serviceId, title, price, description, appoint_time appointTime, status, create_time createTime FROM service_order WHERE id = ?";
+        String sql = "SELECT id, user_id userId, pet_id petId, service_id serviceId, title, price, description, remark, appoint_time appointTime, status, create_time createTime FROM service_order WHERE id = ?";
         return queryForOne(ServiceOrder.class, sql, id);
     }
 
@@ -26,7 +26,7 @@ public class ServiceOrderDao extends BaseDao {
     public java.util.List<ServiceOrder> queryOrdersByUserId(Integer userId) {
         // ✅ 核心修复：把 sys_pet 改成了 pet_info
         String sql = "SELECT so.id, so.user_id userId, so.pet_id petId, so.service_id serviceId, " +
-                "so.title, so.price, so.description, so.appoint_time appointTime, so.status, so.create_time createTime, " +
+                "so.title, so.price, so.description, so.remark, so.appoint_time appointTime, so.status, so.create_time createTime, " +
                 "si.title AS serviceTitle, " +
                 "pi.name AS petName, " +
                 "u.username AS username " +
@@ -51,5 +51,13 @@ public class ServiceOrderDao extends BaseDao {
      */
     public int cancelOrder(Integer id) {
         return updateOrderStatus(id, "已取消");
+    }
+
+    /**
+     * 更新订单备注
+     */
+    public int updateOrderRemark(Integer id, String remark) {
+        String sql = "UPDATE service_order SET remark = ? WHERE id = ?";
+        return update(sql, remark, id);
     }
 }
