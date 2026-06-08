@@ -60,4 +60,29 @@ public class ServiceOrderDao extends BaseDao {
         String sql = "UPDATE service_order SET remark = ? WHERE id = ?";
         return update(sql, remark, id);
     }
+
+    /**
+     * 查询所有订单（多表联查，含用户名、宠物名、服务名）
+     */
+    public java.util.List<ServiceOrder> getAllOrders() {
+        String sql = "SELECT so.id, so.user_id userId, so.pet_id petId, so.service_id serviceId, " +
+                "so.title, so.price, so.description, so.remark, so.appoint_time appointTime, so.status, so.create_time createTime, " +
+                "si.title AS serviceTitle, " +
+                "pi.name AS petName, " +
+                "u.username AS username " +
+                "FROM service_order so " +
+                "LEFT JOIN service_item si ON so.service_id = si.id " +
+                "LEFT JOIN pet_info pi ON so.pet_id = pi.id " +
+                "LEFT JOIN sys_user u ON so.user_id = u.id " +
+                "ORDER BY so.create_time DESC";
+        return queryForList(ServiceOrder.class, sql);
+    }
+
+    /**
+     * 更新订单状态（使用数值状态）
+     */
+    public int updateOrderStatus(Integer id, Integer status) {
+        String sql = "UPDATE service_order SET status = ? WHERE id = ?";
+        return update(sql, status, id);
+    }
 }

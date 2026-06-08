@@ -58,4 +58,18 @@ public class ServiceOrderService {
     public boolean updateOrderRemark(Integer orderId, String remark) {
         return serviceOrderDao.updateOrderRemark(orderId, remark) > 0;
     }
+
+    /**
+     * 业务：获取所有订单
+     */
+    public List<ServiceOrder> getAllOrders() {
+        return serviceOrderDao.getAllOrders();
+    }
+
+    /**
+     * 业务：更新订单状态（数值）
+     */
+    public boolean updateOrderStatus(Integer orderId, Integer status) {
+        return serviceOrderDao.updateOrderStatus(orderId, status) > 0;
+    }
 }

@@ -50,6 +50,10 @@ public class OrderServlet extends HttpServlet {
             cancelOrder(req, resp);
         } else if ("updateRemark".equals(action)) {
             updateRemark(req, resp);
+        } else if ("manageList".equals(action)) {
+            manageList(req, resp);
+        } else if ("acceptOrder".equals(action)) {
+            acceptOrder(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list");
         }
@@ -163,6 +167,32 @@ public class OrderServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             resp.sendRedirect(req.getContextPath() + "/orderServlet?action=myOrders&msg=" + URLEncoder.encode("服务器异常，请稍后重试", "UTF-8"));
+        }
+    }
+
+    /**
+     * 跳转到商家订单管理页面
+     */
+    private void manageList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<ServiceOrder> orderList = serviceOrderService.getAllOrders();
+        req.setAttribute("orderList", orderList);
+        req.getRequestDispatcher("/view/order/merchant_orders.jsp").forward(req, resp);
+    }
+
+    /**
+     * 商家接单，将订单状态更新为 1（已接单）
+     */
+    private void acceptOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            int orderId = Integer.parseInt(req.getParameter("orderId"));
+            serviceOrderService.updateOrderStatus(orderId, 1);
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=manageList");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=manageList");
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/orderServlet?action=manageList");
         }
     }
 
