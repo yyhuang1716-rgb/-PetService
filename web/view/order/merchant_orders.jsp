@@ -97,7 +97,7 @@
 <body>
 <div class="container">
 
-    <a href="${pageContext.request.contextPath}/index.jsp" class="nav-back">⬅ 返回首页</a>
+    <a href="${pageContext.request.contextPath}/view/merchant/home.jsp" class="nav-back">⬅ 返回工作台</a>
     <h2>📋 商家订单管理</h2>
 
     <c:choose>
