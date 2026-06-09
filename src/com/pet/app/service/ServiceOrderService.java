@@ -67,6 +67,20 @@ public class ServiceOrderService {
     }
 
     /**
+     * 业务：查询正在服务中的订单（已接单+服务中）
+     */
+    public List<ServiceOrder> getOrdersByServiceIng() {
+        return serviceOrderDao.getOrdersByServiceIng();
+    }
+
+    /**
+     * 业务：根据状态统计订单数量
+     */
+    public Long countOrdersByStatus(Integer status) {
+        return serviceOrderDao.countOrdersByStatus(status);
+    }
+
+    /**
      * 业务：查询商家所有已评价订单（含评分和评价内容）
      */
     public java.util.List<ServiceOrder> getReviewedOrdersByMerchantId(Integer merchantId) {

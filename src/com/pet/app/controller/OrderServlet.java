@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -59,10 +60,16 @@ public class OrderServlet extends HttpServlet {
             acceptOrder(req, resp);
         } else if ("completeOrder".equals(action)) {
             completeOrder(req, resp);
+        } else if ("serviceIng".equals(action)) {
+            serviceIng(req, resp);
         } else if ("toReview".equals(action)) {
             toReview(req, resp);
         } else if ("submitReview".equals(action)) {
             submitReview(req, resp);
+        } else if ("home".equals(action)) {
+            home(req, resp);
+        } else if ("exportReport".equals(action)) {
+            exportReport(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list");
         }
@@ -223,6 +230,80 @@ public class OrderServlet extends HttpServlet {
     }
 
     /**
+     * 查看当前正在服务中的订单（已接单+服务中）
+     */
+    private void serviceIng(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<ServiceOrder> orderList = serviceOrderService.getOrdersByServiceIng();
+        req.setAttribute("orderList", orderList);
+        req.getRequestDispatcher("/view/merchant/service_ing.jsp").forward(req, resp);
+    }
+
+    /**
+     * 商家工作台首页 - 动态加载数据看板数据
+     */
+    private void home(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 统计服务中宠物数量（已接单+服务中）
+        long serviceIngCount = serviceOrderService.countOrdersByStatus(1)
+                + serviceOrderService.countOrdersByStatus(2);
+        req.setAttribute("serviceIngCount", serviceIngCount);
+        req.getRequestDispatcher("/view/merchant/home.jsp").forward(req, resp);
+    }
+
+    /**
+     * 导出财务报表（CSV格式）
+     */
+    private void exportReport(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        List<ServiceOrder> orderList = serviceOrderService.getAllOrders();
+
+        // 设置响应头，以附件形式下载 CSV 文件
+        resp.setContentType("text/csv;charset=UTF-8");
+        resp.setHeader("Content-Disposition",
+                "attachment;filename=" + URLEncoder.encode("财务报表", "UTF-8") + "_"
+                        + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".csv");
+
+        // 写入 UTF-8 BOM，使 Excel 正确识别中文
+        PrintWriter writer = resp.getWriter();
+        writer.write("\uFEFF");
+
+        // CSV 表头
+        writer.println("订单号,用户名,宠物名,服务名称,价格,预约时间,订单状态,创建时间");
+
+        // CSV 数据行
+        for (ServiceOrder order : orderList) {
+            // 状态码转中文
+            String statusText;
+            switch (order.getStatus() == null ? -1 : order.getStatus()) {
+                case 0:  statusText = "待接单"; break;
+                case 1:  statusText = "已接单"; break;
+                case 2:  statusText = "服务中"; break;
+                case 3:  statusText = "已完成"; break;
+                case 4:  statusText = "已取消"; break;
+                case 5:  statusText = "已评价"; break;
+                default: statusText = "未知"; break;
+            }
+
+            // 处理 null 值和逗号转义
+            String safeUsername = order.getUsername() == null ? "" : order.getUsername().replace(",", "，");
+            String safePetName = order.getPetName() == null ? "" : order.getPetName().replace(",", "，");
+            String safeServiceTitle = order.getServiceTitle() == null ? "" : order.getServiceTitle().replace(",", "，");
+            String appointTimeStr = order.getAppointTime() == null ? "" : order.getAppointTime().toString().replace("T", " ");
+            String createTimeStr = order.getCreateTime() == null ? "" : order.getCreateTime().toString().replace("T", " ");
+            double price = order.getPrice() == null ? 0.0 : order.getPrice();
+
+            writer.println(order.getId() + ","
+                    + safeUsername + ","
+                    + safePetName + ","
+                    + safeServiceTitle + ","
+                    + price + ","
+                    + appointTimeStr + ","
+                    + statusText + ","
+                    + createTimeStr);
+        }
+
+        writer.flush();
+    }
+
+    /**
      * 跳转到评价页面
      */
     private void toReview(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -297,6 +378,8 @@ public class OrderServlet extends HttpServlet {
             int petId = Integer.parseInt(req.getParameter("pet_id"));
             String appointTimeStr = req.getParameter("appointment_time");
 
+
+
             // 解析预约时间字符串为 LocalDateTime 对象
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
             LocalDateTime appointTime = LocalDateTime.parse(appointTimeStr, formatter);
@@ -333,6 +416,10 @@ public class OrderServlet extends HttpServlet {
             e.printStackTrace();
             // 参数解析失败，重定向并提示错误
             resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list&msg=" + URLEncoder.encode("参数错误，请重新预约", "UTF-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 时间解析失败或其他异常
+            resp.sendRedirect(req.getContextPath() + "/serviceItemServlet?action=list&msg=" + URLEncoder.encode("时间格式错误，请重新预约", "UTF-8"));
         }
     }
 }

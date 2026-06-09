@@ -83,6 +83,35 @@ public class ServiceOrderDao extends BaseDao {
     }
 
     /**
+     * 查询正在服务中的订单（已接单 status=1 和 服务中 status=2）
+     */
+    public java.util.List<ServiceOrder> getOrdersByServiceIng() {
+        String sql = "SELECT so.id, so.user_id userId, so.pet_id petId, so.service_id serviceId, " +
+                "so.title, so.price, so.description, so.remark, so.appoint_time appointTime, so.status, so.create_time createTime, " +
+                "si.title AS serviceTitle, " +
+                "pi.name AS petName, " +
+                "u.username AS username, " +
+                "ur.rating AS rating, ur.content AS reviewContent, ur.create_time AS reviewTime " +
+                "FROM service_order so " +
+                "LEFT JOIN service_item si ON so.service_id = si.id " +
+                "LEFT JOIN pet_info pi ON so.pet_id = pi.id " +
+                "LEFT JOIN sys_user u ON so.user_id = u.id " +
+                "LEFT JOIN user_review ur ON so.id = ur.order_id " +
+                "WHERE so.status IN (1, 2) " +
+                "ORDER BY so.create_time DESC";
+        return queryForList(ServiceOrder.class, sql);
+    }
+
+    /**
+     * 根据状态统计订单数量
+     */
+    public Long countOrdersByStatus(Integer status) {
+        String sql = "SELECT COUNT(*) FROM service_order WHERE status = ?";
+        Object result = queryForSingleValue(sql, status);
+        return result != null ? ((Number) result).longValue() : 0L;
+    }
+
+    /**
      * 查询商家所有的已完成评价订单（含评分和评价内容）
      */
     public java.util.List<ServiceOrder> queryReviewedOrdersByMerchantId(Integer merchantId) {

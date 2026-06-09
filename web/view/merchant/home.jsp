@@ -293,7 +293,7 @@
         <div class="sub">商家管理后台</div>
     </div>
     <nav class="sidebar-nav">
-        <a href="${pageContext.request.contextPath}/view/merchant/home.jsp" class="active">
+        <a href="${pageContext.request.contextPath}/orderServlet?action=home" class="active">
             <span class="icon">🏠</span><span>工作台首页</span>
         </a>
         <a href="${pageContext.request.contextPath}/orderServlet?action=manageList">
@@ -363,11 +363,11 @@
             </div>
 
             <div class="stat-card card-blue"
-                 onclick="location.href='${pageContext.request.contextPath}/serviceItemServlet?action=manageList'">
+                 onclick="location.href='${pageContext.request.contextPath}/orderServlet?action=serviceIng'">
                 <div class="card-top">
                     <div>
                         <div class="card-label">服务中宠物</div>
-                        <div class="card-value">8</div>
+                        <div class="card-value">${not empty serviceIngCount ? serviceIngCount : 0}</div>
                     </div>
                     <div class="card-icon">🐕</div>
                 </div>
@@ -392,7 +392,7 @@
 
                 <!-- 导出财务报表 -->
                 <div class="qa-card qa-blue"
-                     onclick="alert('✅ 财务报表已开始生成，请稍后查看下载！')">
+                     onclick="location.href='${pageContext.request.contextPath}/orderServlet?action=exportReport'">
                     <div class="qa-icon">📊</div>
                     <div class="qa-info">
                         <div class="qa-label">导出财务报表</div>

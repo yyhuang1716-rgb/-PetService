@@ -55,9 +55,26 @@ public class ReviewServlet extends HttpServlet {
             return;
         }
 
-        java.util.List<ServiceOrder> list = userReviewService.getAllReviews();
-        req.setAttribute("reviewList", list);
-        req.getRequestDispatcher("/view/order/merchant_reviews.jsp").forward(req, resp);
+        System.out.println("========== [Debug] merchantList 开始执行 ==========");
+        try {
+            java.util.List<ServiceOrder> list = userReviewService.getAllReviews();
+            System.out.println("[Debug] userReviewService.getAllReviews() 返回结果: " + list);
+            if (list == null) {
+                System.out.println("[Debug] ⚠️ List 为 NULL");
+            } else {
+                System.out.println("[Debug] List 大小: " + list.size());
+                if (!list.isEmpty()) {
+                    System.out.println("[Debug] 第一条数据示例: username=" + list.get(0).getUsername() + ", serviceTitle=" + list.get(0).getServiceTitle());
+                }
+            }
+            req.setAttribute("reviewList", list);
+            System.out.println("========== [Debug] merchantList 执行完毕 ==========");
+            req.getRequestDispatcher("/view/order/merchant_reviews.jsp").forward(req, resp);
+        } catch (Exception e) {
+            System.err.println("[Debug] ❌ merchantList 发生异常: " + e.getMessage());
+            e.printStackTrace();
+            throw new ServletException(e);
+        }
     }
 
     /**
