@@ -66,8 +66,18 @@ public class UserServlet extends HttpServlet {
 
             boolean isSuccess = userService.registerUser(newUser);
             if (isSuccess) {
-                // 注册成功：跳转到登录页
-                resp.sendRedirect(req.getContextPath() + "/view/user/login.jsp?msg=注册成功，请登录");
+                // 注册成功：自动登录，直接跳转到对应主页
+                User loginUser = userService.login(newUser.getUsername(), newUser.getPassword());
+                if (loginUser != null) {
+                    req.getSession().setAttribute("user", loginUser);
+                    if (loginUser.getRole() == 0) {
+                        resp.sendRedirect(req.getContextPath() + "/petServlet?action=list");
+                    } else {
+                        resp.sendRedirect(req.getContextPath() + "/view/merchant/home.jsp");
+                    }
+                } else {
+                    resp.sendRedirect(req.getContextPath() + "/view/user/login.jsp?msg=注册成功，请登录");
+                }
             } else {
                 // 注册失败：返回注册页并显示错误
                 req.setAttribute("error", "该用户名已经被占用了！");
