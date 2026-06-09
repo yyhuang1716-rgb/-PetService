@@ -73,3 +73,17 @@ CREATE TABLE IF NOT EXISTS user_review (
 ) COMMENT = '用户评价表' CHARSET = utf8mb4;
 
 CREATE INDEX idx_review_order_id ON user_review (order_id);
+
+-- 6. 用户收藏表
+CREATE TABLE IF NOT EXISTS user_favorite (
+    id INT AUTO_INCREMENT COMMENT '收藏ID' PRIMARY KEY,
+    user_id INT NOT NULL COMMENT '用户ID',
+    service_id INT NOT NULL COMMENT '服务项目ID',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',
+    CONSTRAINT user_favorite_ibfk_1 FOREIGN KEY (user_id) REFERENCES sys_user (id) ON DELETE CASCADE,
+    CONSTRAINT user_favorite_ibfk_2 FOREIGN KEY (service_id) REFERENCES service_item (id) ON DELETE CASCADE
+) COMMENT = '用户收藏表' CHARSET = utf8mb4;
+
+CREATE INDEX idx_favorite_user_id ON user_favorite (user_id);
+CREATE INDEX idx_favorite_service_id ON user_favorite (service_id);
+CREATE UNIQUE INDEX idx_favorite_user_service ON user_favorite (user_id, service_id);

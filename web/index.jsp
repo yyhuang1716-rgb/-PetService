@@ -718,7 +718,7 @@
                             <h3>我的预约</h3>
                             <p>查看和管理预约</p>
                         </div>
-                        <div class="action-card">
+                        <div class="action-card" onclick="window.location.href='${pageContext.request.contextPath}/favoriteServlet?action=list'">
                             <div class="icon">⭐</div>
                             <h3>我的收藏</h3>
                             <p>收藏的服务和商家</p>
@@ -728,7 +728,7 @@
                             <h3>我的评价</h3>
                             <p>查看历史评价</p>
                         </div>
-                        <div class="action-card">
+                        <div class="action-card" onclick="window.location.href='${pageContext.request.contextPath}/view/user/profile.jsp'">
                             <div class="icon">👤</div>
                             <h3>个人中心</h3>
                             <p>个人信息设置</p>

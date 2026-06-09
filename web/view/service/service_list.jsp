@@ -33,6 +33,8 @@
         .btn-group { display: flex; gap: 12px; margin-top: auto; }
         .btn-book { background: #FFD166; color: #333; border: none; border-radius: 20px; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: bold; text-decoration: none; text-align: center; transition: background 0.3s; flex: 1; }
         .btn-book:hover { background: #FFC233; }
+        .btn-fav { background: #FF6B81; color: #fff; border: none; border-radius: 20px; padding: 10px 16px; cursor: pointer; text-decoration: none; font-size: 13px; text-align: center; transition: background 0.3s; white-space: nowrap; }
+        .btn-fav:hover { background: #E85A6F; }
         .btn-del { background: #FF6B6B; color: white; border: none; border-radius: 20px; padding: 10px 16px; cursor: pointer; text-decoration: none; font-size: 12px; text-align: center; transition: background 0.3s; }
         .btn-del:hover { background: #FF4444; }
 
@@ -58,6 +60,9 @@
             <c:when test="${param.msg eq '预约成功'}">
                 <div class="msg-toast msg-success">✅ ${param.msg}！商家将尽快与您联系确认。</div>
             </c:when>
+            <c:when test="${param.msg eq '收藏成功'}">
+                <div class="msg-toast msg-success">✅ ${param.msg}</div>
+            </c:when>
             <c:otherwise>
                 <div class="msg-toast msg-error">❌ ${param.msg}</div>
             </c:otherwise>
@@ -80,7 +85,12 @@
                         <p class="price">¥${service.price} <small>/ 次</small></p>
                         <div class="btn-group">
                             <a href="${pageContext.request.contextPath}/orderServlet?action=toBook&service_item_id=${service.id}&merchant_id=${service.merchantId}" class="btn-book">立即预约</a>
-                            <a href="${pageContext.request.contextPath}/serviceItemServlet?action=delete&id=${service.id}" class="btn-del" onclick="return confirm('确定要删除这个服务项目吗？');">删除</a>
+                            <c:if test="${not empty sessionScope.user}">
+                                <a href="${pageContext.request.contextPath}/favoriteServlet?action=add&serviceId=${service.id}" class="btn-fav">❤️ 收藏</a>
+                            </c:if>
+                            <c:if test="${not empty sessionScope.user && sessionScope.user.role == 1}">
+                                <a href="${pageContext.request.contextPath}/serviceItemServlet?action=delete&id=${service.id}" class="btn-del" onclick="return confirm('确定要删除这个服务项目吗？');">删除</a>
+                            </c:if>
                         </div>
                     </div>
                 </c:forEach>

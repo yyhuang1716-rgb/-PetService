@@ -11,6 +11,10 @@ public class ServiceItem {
     private String description;   // 详细描述
     private LocalDateTime createTime;
 
+    // 收藏相关（联表查询收藏列表时使用）
+    private Integer favoriteId;   // 收藏记录ID
+    private LocalDateTime favoriteCreateTime;  // 收藏时间
+
     public ServiceItem() {}
 
     public Integer getId() { return id; }
@@ -36,4 +40,10 @@ public class ServiceItem {
 
     public LocalDateTime getCreateTime() { return createTime; }
     public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
+
+    public Integer getFavoriteId() { return favoriteId; }
+    public void setFavoriteId(Integer favoriteId) { this.favoriteId = favoriteId; }
+
+    public LocalDateTime getFavoriteCreateTime() { return favoriteCreateTime; }
+    public void setFavoriteCreateTime(LocalDateTime favoriteCreateTime) { this.favoriteCreateTime = favoriteCreateTime; }
 }

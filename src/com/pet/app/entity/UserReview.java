@@ -1,13 +1,13 @@
 package com.pet.app.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class UserReview {
     private Integer id;
     private Integer orderId;      // 关联的订单ID
     private Integer rating;       // 评分：1-5星
     private String content;       // 评价文字内容
-    private Date createTime;
+    private LocalDateTime createTime;
 
     public UserReview() {}
 
@@ -23,6 +23,6 @@ public class UserReview {
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
 
-    public Date getCreateTime() { return createTime; }
-    public void setCreateTime(Date createTime) { this.createTime = createTime; }
+    public LocalDateTime getCreateTime() { return createTime; }
+    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
 }

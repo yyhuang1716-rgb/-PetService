@@ -190,6 +190,7 @@
                                 <a href="${pageContext.request.contextPath}/orderServlet?action=cancelOrder&orderId=${order.id}"
                                    class="btn-cancel"
                                    onclick="return confirm('确定要取消这个预约吗？')">
+
                                     🗑️ 取消预约
                                 </a>
                             </div>

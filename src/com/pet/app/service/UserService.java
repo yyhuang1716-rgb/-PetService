@@ -28,9 +28,23 @@ public class UserService {
      * 业务：用户登录
      * @param username 用户名
      * @param password 密码
-     * @return 登录成功返回 User 对象，失败返回 null
+     * @return 用户对象，如果用户名或密码错误则返回 null
      */
     public User login(String username, String password) {
         return userDao.queryUserByUsernameAndPassword(username, password);
+    }
+
+    /**
+     * 业务：更新用户信息（手机号和密码）
+     */
+    public boolean updateUserInfo(Integer id, String phone, String password) {
+        return userDao.updateUserInfo(id, phone, password) > 0;
+    }
+
+    /**
+     * 根据ID获取用户完整信息
+     */
+    public User getUserById(Integer id) {
+        return userDao.queryUserById(id);
     }
 }

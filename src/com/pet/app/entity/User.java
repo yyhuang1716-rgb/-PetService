@@ -1,6 +1,6 @@
 package com.pet.app.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class User {
     private Integer id;           // 主键ID
@@ -8,7 +8,7 @@ public class User {
     private String password;      // 登录密码
     private String phone;         // 联系电话
     private Integer role;         // 角色：0普通用户, 1商家, 2管理员
-    private Date createTime;      // 注册时间 (对应 create_time)
+    private LocalDateTime createTime;      // 注册时间 (对应 create_time)
 
     // 无参构造方法 (JavaBean 必备)
     public User() {}
@@ -29,8 +29,8 @@ public class User {
     public Integer getRole() { return role; }
     public void setRole(Integer role) { this.role = role; }
 
-    public Date getCreateTime() { return createTime; }
-    public void setCreateTime(Date createTime) { this.createTime = createTime; }
+    public LocalDateTime getCreateTime() { return createTime; }
+    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
 
     @Override
     public String toString() {

@@ -77,6 +77,43 @@ public class UserServlet extends HttpServlet {
             // ==== 处理退出登录请求 ====
             req.getSession().invalidate();
             resp.sendRedirect(req.getContextPath() + "/index.jsp");
+
+        } else if ("updateProfile".equals(action)) {
+            // ==== 处理修改个人信息 ====
+            updateProfile(req, resp);
+        }
+    }
+
+    /**
+     * 修改个人信息（手机号和密码）
+     */
+    private void updateProfile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 1. 检查是否已登录
+        User loginUser = (User) req.getSession().getAttribute("user");
+        if (loginUser == null) {
+            resp.sendRedirect(req.getContextPath() + "/view/user/login.jsp");
+            return;
+        }
+
+        // 2. 获取表单数据
+        String phone = req.getParameter("phone");
+        String password = req.getParameter("password");
+
+        // 3. 如果密码为空，则沿用旧密码
+        if (password == null || password.trim().isEmpty()) {
+            password = loginUser.getPassword();
+        }
+
+        // 4. 调用 Service 更新数据库
+        boolean success = userService.updateUserInfo(loginUser.getId(), phone, password);
+
+        if (success) {
+            // 5. 更新成功后，重新从数据库拉取最新用户信息，刷新 Session
+            User updatedUser = userService.getUserById(loginUser.getId());
+            req.getSession().setAttribute("user", updatedUser);
+            resp.sendRedirect(req.getContextPath() + "/view/user/profile.jsp?msg=" + java.net.URLEncoder.encode("个人信息修改成功！", "UTF-8"));
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/view/user/profile.jsp?error=" + java.net.URLEncoder.encode("修改失败，请重试", "UTF-8"));
         }
     }
 

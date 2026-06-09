@@ -34,4 +34,24 @@ public class UserDao extends BaseDao {
         String sql = "INSERT INTO sys_user(username, password, phone, role) VALUES(?, ?, ?, ?)";
         return update(sql, user.getUsername(), user.getPassword(), user.getPhone(), user.getRole());
     }
+
+    /**
+     * 更新用户信息（手机号和密码）
+     * @param id 用户ID
+     * @param phone 新手机号
+     * @param password 新密码
+     * @return 影响的行数，大于 0 说明成功
+     */
+    public int updateUserInfo(Integer id, String phone, String password) {
+        String sql = "UPDATE sys_user SET phone = ?, password = ? WHERE id = ?";
+        return update(sql, phone, password, id);
+    }
+
+    /**
+     * 根据ID查询用户
+     */
+    public User queryUserById(Integer id) {
+        String sql = "SELECT id, username, password, phone, role, create_time createTime FROM sys_user WHERE id = ?";
+        return queryForOne(User.class, sql, id);
+    }
 }
