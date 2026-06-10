@@ -712,6 +712,7 @@
                             <div class="icon">🎯</div>
                             <h3>服务项目</h3>
                             <p>浏览所有可预约服务</p>
+
                         </div>
                         <div class="action-card" onclick="window.location.href='${pageContext.request.contextPath}/orderServlet?action=myOrders'">
                             <div class="icon">📅</div>
@@ -873,6 +874,7 @@
     <h3>🐾 萌宠之家</h3>
     <p>用爱守护每一只毛孩子的健康成长</p>
     <p class="copyright">&copy; 2025 萌宠之家 · 让爱宠生活更美好</p>
+    <p style="margin-top:8px; font-size:13px; opacity:0.7;">👥 当前在线：${onlineCount} 人</p>
 </footer>
 
 </body>

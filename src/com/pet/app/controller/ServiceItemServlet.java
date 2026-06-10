@@ -1,5 +1,6 @@
 package com.pet.app.controller;
 
+import com.pet.app.entity.PageBean;
 import com.pet.app.entity.ServiceItem;
 import com.pet.app.entity.User;
 import com.pet.app.service.ServiceItemService;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet("/serviceItemServlet")
 public class ServiceItemServlet extends HttpServlet {
@@ -51,14 +53,18 @@ public class ServiceItemServlet extends HttpServlet {
     }
 
     /**
-     * 查询所有服务项目
+     * 查询所有服务项目（分页）
      */
     private void listServices(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 获取所有服务项目
-        List<ServiceItem> serviceList = serviceItemService.getAllServices();
-        // 把数据塞进 request 中
-        req.setAttribute("serviceList", serviceList);
-        // 转发给 JSP 页面去渲染展示
+        int page = 1;
+        int size = 6;
+        String pageStr = req.getParameter("page");
+        if (pageStr != null && !pageStr.isEmpty()) {
+            page = Integer.parseInt(pageStr);
+        }
+        PageBean<ServiceItem> pageBean = serviceItemService.getServicesPage(page, size);
+        req.setAttribute("pageBean", pageBean);
+        req.setAttribute("serviceList", pageBean.getList());
         req.getRequestDispatcher("/view/service/service_list.jsp").forward(req, resp);
     }
 

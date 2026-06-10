@@ -98,6 +98,31 @@
         </c:choose>
     </div>
 
+    <%-- 分页导航 --%>
+    <c:if test="${pageBean.totalPages > 1}">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <c:if test="${pageBean.page > 1}">
+                <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list&page=${pageBean.page - 1}"
+                   style="display: inline-block; padding: 8px 18px; margin: 0 4px; background: #06C270; color: white; border-radius: 20px; text-decoration: none; font-size: 14px;">上一页</a>
+            </c:if>
+            <c:forEach begin="1" end="${pageBean.totalPages}" var="i">
+                <c:choose>
+                    <c:when test="${i == pageBean.page}">
+                        <span style="display: inline-block; padding: 8px 16px; margin: 0 2px; background: #FFD166; color: #333; border-radius: 50%; font-weight: bold;">${i}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list&page=${i}"
+                           style="display: inline-block; padding: 8px 16px; margin: 0 2px; background: #f0f0f0; color: #333; border-radius: 50%; text-decoration: none;">${i}</a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+            <c:if test="${pageBean.page < pageBean.totalPages}">
+                <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list&page=${pageBean.page + 1}"
+                   style="display: inline-block; padding: 8px 18px; margin: 0 4px; background: #06C270; color: white; border-radius: 20px; text-decoration: none; font-size: 14px;">下一页</a>
+            </c:if>
+        </div>
+    </c:if>
+
     <div class="add-form">
         <c:if test="${not empty sessionScope.user && sessionScope.user.role == 1}">
             <h3 style="margin-top:0;">➕ 添加新服务项目</h3>

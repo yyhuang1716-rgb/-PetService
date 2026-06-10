@@ -66,6 +66,27 @@ public class ServiceItemDao extends BaseDao {
     }
 
     /**
+     * 分页查询服务项目
+     * @param page 页码（从1开始）
+     * @param size 每页条数
+     * @return 服务项目列表
+     */
+    public List<ServiceItem> queryServicesPage(int page, int size) {
+        String sql = "SELECT id, merchant_id merchantId, title, price, description, create_time createTime FROM service_item ORDER BY id ASC LIMIT ?, ?";
+        return queryForList(ServiceItem.class, sql, (page - 1) * size, size);
+    }
+
+    /**
+     * 统计服务项目总数
+     * @return 总记录数
+     */
+    public int countServices() {
+        String sql = "SELECT COUNT(*) FROM service_item";
+        Number num = (Number) queryForSingleValue(sql);
+        return num != null ? num.intValue() : 0;
+    }
+
+    /**
      * 根据服务ID删除服务项目
      * @param id 服务ID
      * @return 影响的行数，大于 0 说明成功

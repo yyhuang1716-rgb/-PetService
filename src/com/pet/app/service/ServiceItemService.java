@@ -1,6 +1,7 @@
 package com.pet.app.service;
 
 import com.pet.app.dao.ServiceItemDao;
+import com.pet.app.entity.PageBean;
 import com.pet.app.entity.ServiceItem;
 
 import java.util.List;
@@ -42,6 +43,18 @@ public class ServiceItemService {
      */
     public List<ServiceItem> getServicesByKeyword(String keyword) {
         return serviceItemDao.queryServicesByKeyword(keyword);
+    }
+
+    /**
+     * 分页获取服务项目
+     * @param page 页码
+     * @param size 每页条数
+     * @return 分页数据
+     */
+    public PageBean<ServiceItem> getServicesPage(int page, int size) {
+        List<ServiceItem> list = serviceItemDao.queryServicesPage(page, size);
+        int total = serviceItemDao.countServices();
+        return new PageBean<>(page, size, total, list);
     }
 
     /**
