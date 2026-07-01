@@ -8,7 +8,7 @@ public class Pet {
     private Integer id;
     private Integer userId;       // 所属用户ID
     private String name;          // 宠物昵称
-    private String type;          // 种类：猫/狗/其他
+    private String type; //         // 种类：猫/狗/其他
     private Integer age;          // 年龄
     private Double weight;        // 体重 (对应 DECIMAL，Java 中用 Double 接收)
     private LocalDateTime createTime;
