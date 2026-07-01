@@ -7,6 +7,7 @@ public class ServiceOrderDao extends BaseDao {
     /**
      * 插入新的服务预约订单
      */
+    // Dao②ServiceOrderDao 下单插入
     public int insertOrder(ServiceOrder order) {
         String sql = "INSERT INTO service_order(user_id, pet_id, service_id, title, price, description, appoint_time, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         return update(sql, order.getUserId(), order.getPetId(), order.getServiceId(), order.getTitle(), order.getPrice(), order.getDescription(), order.getAppointTime(), order.getStatus());

@@ -1,7 +1,7 @@
 package com.pet.app.entity;
 
 import java.time.LocalDateTime;
-
+//VO类 — ServiceOrder.java（核心字段）
 public class ServiceOrder {
     private Integer id;
     private Integer userId;       // 预约用户ID

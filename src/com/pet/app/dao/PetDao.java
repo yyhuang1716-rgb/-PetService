@@ -3,7 +3,7 @@ package com.pet.app.dao;
 import com.pet.app.entity.Pet;
 
 import java.util.List;
-
+//关键入口：PetDao 调用 BaseDao 并传入 Pet.class
 public class PetDao extends BaseDao {
 
     /**
@@ -11,11 +11,13 @@ public class PetDao extends BaseDao {
      * @param pet 宠物对象
      * @return 影响的行数，大于 0 说明成功
      */
+    //一、保存/添加一只宠物
     public int savePet(Pet pet) {
         String sql = "INSERT INTO pet_info(user_id, name, type, age, weight) VALUES(?, ?, ?, ?, ?)";
         return update(sql, pet.getUserId(), pet.getName(), pet.getType(), pet.getAge(), pet.getWeight());
     }
 
+    //二、根据宠物ID查询宠物信息
     /**
      * 根据宠物ID查询宠物信息
      * @param id 宠物ID
@@ -23,9 +25,11 @@ public class PetDao extends BaseDao {
      */
     public Pet queryPetById(Integer id) {
         String sql = "SELECT id, user_id userId, name, type, age, weight, create_time createTime FROM pet_info WHERE id = ?";
+        // 传入 Pet.class 作为类型参数
         return queryForOne(Pet.class, sql, id);
     }
 
+    //三、根据用户ID查询该用户的所有宠物
     /**
      * 根据用户ID查询该用户的所有宠物
      * @param userId 用户ID

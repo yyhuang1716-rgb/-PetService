@@ -71,6 +71,7 @@ public class ServiceItemDao extends BaseDao {
      * @param size 每页条数
      * @return 服务项目列表
      */
+    //①Dao层分页查询
     public List<ServiceItem> queryServicesPage(int page, int size) {
         String sql = "SELECT id, merchant_id merchantId, title, price, description, create_time createTime FROM service_item ORDER BY id ASC LIMIT ?, ?";
         return queryForList(ServiceItem.class, sql, (page - 1) * size, size);

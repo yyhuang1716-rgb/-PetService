@@ -71,6 +71,10 @@ public abstract class BaseDao {
         try {
             con = JdbcUtils.getConnection();
             return queryRunner.query(con, sql, new BeanListHandler<T>(type), args);
+            //BeanHandler<Pet> 是 Dbutils 的核心机制，它会：
+            //从数据库获取 ResultSet
+            //通过 反射 创建 Pet 对象实例
+            //将 结果集列名 与 Pet 类的属性名 匹配，调用对应的 setter 方法赋值
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

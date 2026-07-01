@@ -2,7 +2,9 @@ package com.pet.app.entity;
 
 import java.time.LocalDateTime;
 
+
 public class Pet {
+    //与数据库对应
     private Integer id;
     private Integer userId;       // 所属用户ID
     private String name;          // 宠物昵称
