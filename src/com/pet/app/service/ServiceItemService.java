@@ -58,6 +58,27 @@ public class ServiceItemService {
     }
 
     /**
+     * 按类型分页获取服务项目
+     * @param type 服务类型
+     * @param page 页码
+     * @param size 每页条数
+     * @return 分页数据
+     */
+    public PageBean<ServiceItem> getServicesPageByType(String type, int page, int size) {
+        List<ServiceItem> list = serviceItemDao.queryServicesPageByType(type, page, size);
+        int total = serviceItemDao.countServicesByType(type);
+        return new PageBean<>(page, size, total, list);
+    }
+
+    /**
+     * 获取所有不同的服务类型
+     * @return 服务类型列表
+     */
+    public List<String> getDistinctTypes() {
+        return serviceItemDao.queryDistinctTypes();
+    }
+
+    /**
      * 业务：添加服务项目
      * @param serviceItem 服务项目对象
      * @return true 表示添加成功，false 表示添加失败

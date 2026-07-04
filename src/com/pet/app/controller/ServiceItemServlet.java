@@ -53,7 +53,7 @@ public class ServiceItemServlet extends HttpServlet {
     }
 
     /**
-     * 查询所有服务项目（分页）
+     * 查询所有服务项目（分页），支持按类型过滤
      */
     private void listServices(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int page = 1;
@@ -62,9 +62,23 @@ public class ServiceItemServlet extends HttpServlet {
         if (pageStr != null && !pageStr.isEmpty()) {
             page = Integer.parseInt(pageStr);
         }
-        PageBean<ServiceItem> pageBean = serviceItemService.getServicesPage(page, size);
+
+        // 获取类型参数
+        String type = req.getParameter("type");
+        PageBean<ServiceItem> pageBean;
+        if (type != null && !type.trim().isEmpty()) {
+            pageBean = serviceItemService.getServicesPageByType(type, page, size);
+        } else {
+            pageBean = serviceItemService.getServicesPage(page, size);
+        }
         req.setAttribute("pageBean", pageBean);
         req.setAttribute("serviceList", pageBean.getList());
+        req.setAttribute("currentType", type);
+
+        // 查询所有服务类型，供分类标签栏使用
+        List<String> types = serviceItemService.getDistinctTypes();
+        req.setAttribute("typeList", types);
+
         req.getRequestDispatcher("/view/service/service_list.jsp").forward(req, resp);
     }
 
@@ -78,6 +92,7 @@ public class ServiceItemServlet extends HttpServlet {
         if (user != null) {
             // 接收表单传来的数据
             String title = req.getParameter("title");
+            String type = req.getParameter("type");
             double price = Double.parseDouble(req.getParameter("price"));
             String description = req.getParameter("description");
 
@@ -85,6 +100,7 @@ public class ServiceItemServlet extends HttpServlet {
             ServiceItem serviceItem = new ServiceItem();
             serviceItem.setMerchantId(user.getId());
             serviceItem.setTitle(title);
+            serviceItem.setType(type);
             serviceItem.setPrice(price);
             serviceItem.setDescription(description);
 
@@ -100,7 +116,8 @@ public class ServiceItemServlet extends HttpServlet {
      * 跳转到商家发布新服务页面
      */
     private void toAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/view/merchant/service_add.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "serviceAdd");
+        req.getRequestDispatcher("/view/merchant/home.jsp").forward(req, resp);
     }
 
     /**
@@ -115,7 +132,8 @@ public class ServiceItemServlet extends HttpServlet {
             serviceList = serviceItemService.getAllServices();
         }
         req.setAttribute("serviceList", serviceList);
-        req.getRequestDispatcher("/view/merchant/service_manage.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "services");
+        req.getRequestDispatcher("/view/merchant/home.jsp").forward(req, resp);
     }
 
     /**
@@ -140,7 +158,8 @@ public class ServiceItemServlet extends HttpServlet {
             ServiceItem serviceItem = serviceItemService.getServiceById(id);
             req.setAttribute("serviceItem", serviceItem);
         }
-        req.getRequestDispatcher("/view/merchant/service_edit.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "serviceEdit");
+        req.getRequestDispatcher("/view/merchant/home.jsp").forward(req, resp);
     }
 
     /**

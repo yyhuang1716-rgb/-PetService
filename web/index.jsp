@@ -192,6 +192,118 @@
             color: #FFFFFF;
         }
 
+        /* ===== 联系我们悬停下拉 ===== */
+        .contact-dropdown { position: relative; display: inline-block; }
+        .contact-dropdown .contact-trigger { color: #444; transition: color 0.2s; cursor: pointer; font-weight: 500; }
+        .contact-dropdown:hover .contact-trigger { color: #06C270; }
+        .contact-dropdown-menu { display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #FFFFFF; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); min-width: 200px; padding: 16px 20px; z-index: 200; border: 1px solid #f0f0f0; }
+        .contact-dropdown:hover .contact-dropdown-menu { display: block; }
+        .contact-dropdown-menu p { margin: 6px 0; font-size: 14px; color: #555; }
+        .contact-dropdown-menu p strong { color: #333; }
+
+        /* ===== 头像悬停下拉菜单 ===== */
+        .user-dropdown-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .user-dropdown-wrap .user-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 24px;
+            transition: background 0.2s;
+        }
+        .user-dropdown-wrap .user-trigger:hover {
+            background: #f5f5f5;
+        }
+        .user-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            min-width: 240px;
+            padding: 20px;
+            z-index: 200;
+            border: 1px solid #f0f0f0;
+        }
+        .user-dropdown-wrap:hover .user-dropdown-menu {
+            display: block;
+        }
+        .user-dropdown-menu .dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 12px;
+        }
+        .user-dropdown-menu .dropdown-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD166, #06C270);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+        .user-dropdown-menu .dropdown-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+        .user-dropdown-menu .dropdown-role {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+        .user-dropdown-menu .dropdown-info {
+            padding: 8px 0;
+            font-size: 13px;
+            color: #888;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 12px;
+        }
+        .user-dropdown-menu .dropdown-info div {
+            padding: 4px 0;
+        }
+        .user-dropdown-menu .dropdown-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .user-dropdown-menu .dropdown-links a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        .user-dropdown-menu .dropdown-links a:hover {
+            background: #E8FAF0;
+            color: #06C270;
+        }
+        .user-dropdown-menu .dropdown-links .logout-link {
+            color: #FF6B6B;
+        }
+        .user-dropdown-menu .dropdown-links .logout-link:hover {
+            background: #FFE8E8;
+            color: #FF4444;
+        }
+
         /* ===== 英雄区域 ===== */
         .hero {
             height: 420px;
@@ -633,7 +745,13 @@
                 </c:when>
                 <c:otherwise>
                     <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list">服务项目</a>
-                    <a href="${pageContext.request.contextPath}/serviceItemServlet?action=list">联系我们</a>
+                    <div class="contact-dropdown">
+                        <span class="contact-trigger">联系我们</span>
+                        <div class="contact-dropdown-menu">
+                            <p>📞 联系电话：<strong>1234567</strong></p>
+                            <p>👩 联系人：<strong>黄女士</strong></p>
+                        </div>
+                    </div>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -644,24 +762,40 @@
                     <a href="${pageContext.request.contextPath}/view/user/register.jsp" class="btn-register">立即注册</a>
                 </c:when>
                 <c:otherwise>
-                    <div class="user-info">
-                        <div class="user-avatar">
-                            <c:out value="${fn:substring(sessionScope.user.username, 0, 1)}" />
+                    <div class="user-dropdown-wrap">
+                        <div class="user-trigger">
+                            <div class="user-avatar">
+                                <c:out value="${fn:substring(sessionScope.user.username, 0, 1)}" />
+                            </div>
+                            <span class="username"><c:out value="${sessionScope.user.username}" /></span>
                         </div>
-                        <span class="username"><c:out value="${sessionScope.user.username}" /></span>
-                        <c:choose>
-                            <c:when test="${sessionScope.user.role == 0}">
-                                <span class="role-badge user">普通用户</span>
-                            </c:when>
-                            <c:when test="${sessionScope.user.role == 1}">
-                                <span class="role-badge merchant">商家</span>
-                            </c:when>
-                            <c:when test="${sessionScope.user.role == 2}">
-                                <span class="role-badge admin">管理员</span>
-                            </c:when>
-                        </c:choose>
+                        <div class="user-dropdown-menu">
+                            <div class="dropdown-header">
+                                <div class="dropdown-avatar">
+                                    <c:out value="${fn:substring(sessionScope.user.username, 0, 1)}" />
+                                </div>
+                                <div>
+                                    <div class="dropdown-name"><c:out value="${sessionScope.user.username}" /></div>
+                                    <div class="dropdown-role">
+                                        <c:choose>
+                                            <c:when test="${sessionScope.user.role == 0}">普通用户</c:when>
+                                            <c:when test="${sessionScope.user.role == 1}">商家</c:when>
+                                            <c:when test="${sessionScope.user.role == 2}">管理员</c:when>
+                                        </c:choose>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown-info">
+                                <div>📱 <c:out value="${empty sessionScope.user.phone ? '未设置手机号' : sessionScope.user.phone}" /></div>
+                            </div>
+                            <div class="dropdown-links">
+                                <a href="${pageContext.request.contextPath}/view/user/profile.jsp">👤 个人中心</a>
+                                <a href="${pageContext.request.contextPath}/orderServlet?action=myOrders">📅 我的预约</a>
+                                <a href="${pageContext.request.contextPath}/favoriteServlet?action=list">⭐ 我的收藏</a>
+                                <a href="${pageContext.request.contextPath}/userServlet?action=logout" class="logout-link">🚪 退出登录</a>
+                            </div>
+                        </div>
                     </div>
-                    <a href="${pageContext.request.contextPath}/userServlet?action=logout" class="btn-logout">退出</a>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -729,11 +863,6 @@
                             <h3>我的评价</h3>
                             <p>查看历史评价</p>
                         </div>
-                        <div class="action-card" onclick="window.location.href='${pageContext.request.contextPath}/view/user/profile.jsp'">
-                            <div class="icon">👤</div>
-                            <h3>个人中心</h3>
-                            <p>个人信息设置</p>
-                        </div>
                     </div>
                 </c:when>
                 <c:when test="${sessionScope.user.role == 1}">
@@ -781,28 +910,28 @@
     <div class="container">
         <h2 class="section-title">我们的服务</h2>
         <div class="services-grid">
-            <div class="service-card" onclick="window.location.href='${pageContext.request.contextPath}/serviceItemServlet?action=list'" style="cursor: pointer;">
+            <div class="service-card">
                 <div class="icon">✂️</div>
                 <h3>美容护理</h3>
                 <p>专业宠物美容师提供</p>
                 <p>洗护、修剪、造型服务</p>
                 <span class="price-tag">¥68 起</span>
             </div>
-            <div class="service-card" onclick="window.location.href='${pageContext.request.contextPath}/serviceItemServlet?action=list'" style="cursor: pointer;">
+            <div class="service-card">
                 <div class="icon">🏠</div>
                 <h3>温馨寄养</h3>
                 <p>24 小时专人陪伴看护</p>
                 <p>独立舒适寄养空间</p>
                 <span class="price-tag">¥88 起</span>
             </div>
-            <div class="service-card" onclick="window.location.href='${pageContext.request.contextPath}/serviceItemServlet?action=list'" style="cursor: pointer;">
+            <div class="service-card">
                 <div class="icon">💉</div>
                 <h3>健康看诊</h3>
                 <p>资深兽医师常规检查</p>
                 <p>疫苗接种与健康咨询</p>
                 <span class="price-tag">¥50 起</span>
             </div>
-            <div class="service-card" onclick="window.location.href='${pageContext.request.contextPath}/serviceItemServlet?action=list'" style="cursor: pointer;">
+            <div class="service-card">
                 <div class="icon">🏅</div>
                 <h3>行为训练</h3>
                 <p>科学正向激励训练</p>

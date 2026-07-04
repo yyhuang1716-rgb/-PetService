@@ -192,7 +192,8 @@ public class OrderServlet extends HttpServlet {
     private void manageList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<ServiceOrder> orderList = serviceOrderService.getAllOrders();
         req.setAttribute("orderList", orderList);
-        req.getRequestDispatcher("/view/order/merchant_orders.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "orders");
+        req.getRequestDispatcher("/view/merchant/home.jsp").forward(req, resp);
     }
 
     /**
@@ -235,7 +236,8 @@ public class OrderServlet extends HttpServlet {
     private void serviceIng(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<ServiceOrder> orderList = serviceOrderService.getOrdersByServiceIng();
         req.setAttribute("orderList", orderList);
-        req.getRequestDispatcher("/view/merchant/service_ing.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "serviceIng");
+        req.getRequestDispatcher("/view/merchant/home.jsp").forward(req, resp);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.pet.app.utils.JdbcUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ColumnListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import java.sql.Connection;
@@ -75,6 +76,22 @@ public abstract class BaseDao {
             //从数据库获取 ResultSet
             //通过 反射 创建 Pet 对象实例
             //将 结果集列名 与 Pet 类的属性名 匹配，调用对应的 setter 方法赋值
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    /**
+     * 执行返回单列多行的 SQL 语句 (例如 SELECT type FROM ...)
+     */
+    public <T> List<T> queryForColumnList(String sql, Object... args) {
+        Connection con = null;
+        try {
+            con = JdbcUtils.getConnection();
+            return queryRunner.query(con, sql, new ColumnListHandler<>(), args);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
